@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QWebEngineView>
+#include <QWebEngineFullScreenRequest>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +19,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QWebEngineView *m_view;
+//    QScopedPointer<FullScreenWindow> m_fullScreenWindow;
 };
 
 #endif // MAINWINDOW_H
