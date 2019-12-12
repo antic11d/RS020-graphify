@@ -31,6 +31,9 @@ SOURCES += \
 HEADERS += \
         mainwindow.h
 
+RESOURCES += \
+        resources/player.qrc
+
 FORMS += \
         mainwindow.ui
 
