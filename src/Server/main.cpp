@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    Server server(9091);
+    Server server(12345);
 
     server.start();
 

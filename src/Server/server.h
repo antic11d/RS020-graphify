@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QRandomGenerator>
 #include <QDebug>
+#include "knowledgegraph.h"
 
 class Server : public QTcpServer
 {
@@ -17,10 +18,11 @@ signals:
 
 public slots:
 
-protected:
+private:
     void incomingConnection(qintptr handle) override;
     QStringList urls;
     int m_port;
+    KnowledgeGraph *m_graph;
 };
 
 #endif // SERVER_H
