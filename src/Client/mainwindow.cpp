@@ -3,16 +3,22 @@
 
 #include <QWebEngineView>
 #include <QWebEngineSettings>
+#include <QListWidget>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , m_view(new QWebEngineView(this))
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-    setCentralWidget(m_view);
-    initializeResources();
+    ui->setupUi(this);
 
-    m_view->load(QUrl(QStringLiteral("qrc:/view.html")));
-//    m_view->
+    QListWidgetItem *newItem = new QListWidgetItem;
+    newItem->setText(QString("Alkohola poplava"));
+    ui->listWidget->insertItem(1, newItem);
+
+    QWebEngineView *view = new QWebEngineView(ui->graphicsView);
+    view->load(QUrl(QStringLiteral("qrc:/view.html")));
+    view->resize (ui->graphicsView->width (), ui->graphicsView->height ());
+    view->show();
 }
 
 MainWindow::~MainWindow()
