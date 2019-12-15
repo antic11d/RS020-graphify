@@ -5,3 +5,6 @@ Song::Song(QString key, QString value, QObject *parent)
 {
 
 }
+
+Song::~Song()
+{}

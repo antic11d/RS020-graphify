@@ -8,6 +8,7 @@ class Performer : public Entity
     Q_OBJECT
 public:
     Performer(QString key, QString value, QObject *parent = nullptr);
+    ~Performer();
 };
 
 #endif // PERFORMER_H

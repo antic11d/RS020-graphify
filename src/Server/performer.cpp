@@ -5,3 +5,7 @@ Performer::Performer(QString key, QString value, QObject *parent)
 {
 
 }
+
+Performer::~Performer()
+{}
+

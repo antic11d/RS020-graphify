@@ -16,11 +16,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        edge.cpp \
         entity.cpp \
         genre.cpp \
+        gentrypoint.cpp \
         knowledgegraph.cpp \
         main.cpp \
+        pentrypoint.cpp \
         performer.cpp \
+        sentrypoint.cpp \
         server.cpp \
         song.cpp \
         worker.cpp
@@ -31,10 +35,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    edge.h \
     entity.h \
     genre.h \
+    gentrypoint.h \
     knowledgegraph.h \
+    pentrypoint.h \
     performer.h \
+    sentrypoint.h \
     server.h \
     song.h \
     worker.h
