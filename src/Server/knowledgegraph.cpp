@@ -25,72 +25,53 @@ void KnowledgeGraph::initalizeGraph()
     parseJsonEntities(jsonArray);
 }
 
-std::pair<bool, QString> KnowledgeGraph::parse(const QJsonValue &v, const QMap<QString, QPointer<Entity>> &entityMap, const QString &field)
+template <typename T>
+QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPointer<Entity>>* entityMap, const QString &field)
 {
-    QString id = v.toObject().value(field).toString();
-
-    if (id == "")
-        return { false, "" };
-
+    QString id = v.toObject().value(field).toString().trimmed();
     int idx = id.lastIndexOf(QString("/"));
     QString parsedId = id.right(id.length() - idx - 1);
 
-    if (entityMap.contains(parsedId))
-        return { false, parsedId };
+    if (parsedId == "")
+        return nullptr;
 
-    return { true, parsedId };
+    if (!entityMap->contains(parsedId)) {
+        QString label = v.toObject().value(field+"Label").toString();
+        Entity* parsed = new T(parsedId, label, this);
+        entityMap->insert(parsedId, parsed);
+        m_entities.push_back(QPointer(parsed));
+
+        return QPointer<Entity>(parsed);
+    } else {
+        return entityMap->take(parsedId);
+    }
+    return nullptr;
 }
 
 
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
     QMap<QString, QPointer<Entity>> entityMap;
-
+    QSet<QString> knownEntites;
     foreach(const QJsonValue &v, arr) {
-        const auto [iTitle, title] = parse(v, entityMap, "title");
-        if (iTitle) {
-            QString titleLabel = v.toObject().value("titleLabel").toString();
-            QPointer<Entity> song(new Song(title, titleLabel, this));
-            entityMap.insert(title, song);
-            m_entities.push_back(song);
-        }
-
-        const auto [iPerformer, performer] = parse(v, entityMap, "performer");
-        if (iPerformer) {
-            QString performerLabel = v.toObject().value("performerLabel").toString();
-            QPointer<Entity> perf(new Performer(performer, performerLabel, this));
-            entityMap.insert(performer, perf);
-            m_entities.push_back(new Performer(performer, performerLabel, this));
-        }
-
-        const auto [iGenre, genre] = parse(v, entityMap, "genre");
-        if (iGenre) {
-            QString genreLabel = v.toObject().value("genreLabel").toString();
-            QPointer<Entity> g(new Genre(genre, genreLabel, this));
-            entityMap.insert(genre, g);
-            m_entities.push_back(new Genre(genre, genreLabel, this));
-        }
-
-        // Connect the dots
-
-        auto P = entityMap.take(performer);
-        auto S = entityMap.take(title);
+        auto song = parse<Song>(v, &entityMap, "title");
+        auto performer = parse<Performer>(v, &entityMap, "performer");
+        auto genre = parse<Genre>(v, &entityMap, "genre");
 
 
-        P->addEdge(QPointer(new Edge("SINGS", S, this)));
-        S->addEdge(QPointer(new Edge("SINGED_BY", P, this)));
-//        P->addEdge(QPointer(new Edge("SINGS", S, this)));
-
-//        if (iGenre) {
-//            auto G = entityMap.take(genre);
-//        }
-
-        qDebug() << P->getValue() << " "
-                 << P->getEdges().at(0)->getType()
-                 << P->getEdges().at(0)->getPointsTo()->getValue();
+//        Connect the dots
+//        performer->addEdge(QPointer(new Edge("SINGS", song, this)));
+//        song->addEdge(QPointer(new Edge("SINGED_BY", performer, this)));
+//        song->addEdge(QPointer(new Edge("TYPE_OF", genre, this)));
+//        genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
     }
 
-//    qDebug() << knownIds;
+    foreach(const auto& e, m_entities) {
+        qDebug() << e->getType() << e->getKey() << e->getValue();
+
+        foreach(const auto& edge, e->getEdges())
+            qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
+    }
 }
 
 KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)

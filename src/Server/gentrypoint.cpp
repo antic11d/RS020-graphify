@@ -1,7 +1,7 @@
 #include "gentrypoint.h"
 
 GEntryPoint::GEntryPoint(QString key, QString value, QObject *parent)
-    : Entity(key, value, parent)
+    : Entity(key, value, "GENRE", parent)
 {
 
 }

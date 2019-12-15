@@ -13,17 +13,19 @@ class Entity : public QObject
 {
     Q_OBJECT
 public:
-    Entity(QString key, QString value, QObject *parent = nullptr);
+    Entity(QString key, QString value, QString type, QObject *parent = nullptr);
     ~Entity();
     void addEdge(QPointer<Edge> edge);
     QVector<QPointer<Edge>> getEdges() const;
     QString getKey() const;
     QString getValue() const;
+    QString getType() const;
 
 protected:
     QString m_key;
     QString m_value;
     QVector<QPointer<Edge>> m_edges;
+    QString m_type;
 
 };
 

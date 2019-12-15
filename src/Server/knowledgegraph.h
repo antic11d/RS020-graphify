@@ -32,7 +32,8 @@ private:
 
     void initalizeGraph();
     void parseJsonEntities(const QJsonArray &arr);
-    std::pair<bool, QString> parse(const QJsonValue &v, const QMap<QString, QPointer<Entity>> &entityMap, const QString &field);
+    template <typename T>
+    QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
 };
 
 #endif // KNOWLEDGEGRAPH_H
