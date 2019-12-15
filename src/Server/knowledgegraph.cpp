@@ -43,7 +43,7 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
 
         return QPointer<Entity>(parsed);
     } else {
-        return entityMap->take(parsedId);
+        return entityMap->value(parsedId);
     }
     return nullptr;
 }
@@ -58,19 +58,25 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
         auto performer = parse<Performer>(v, &entityMap, "performer");
         auto genre = parse<Genre>(v, &entityMap, "genre");
 
-
 //        Connect the dots
-//        performer->addEdge(QPointer(new Edge("SINGS", song, this)));
-//        song->addEdge(QPointer(new Edge("SINGED_BY", performer, this)));
-//        song->addEdge(QPointer(new Edge("TYPE_OF", genre, this)));
-//        genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
+        performer->addEdge(QPointer(new Edge("SINGS", song, this)));
+        song->addEdge(QPointer(new Edge("SINGED_BY", performer, this)));
+        if (genre != nullptr) {
+            song->addEdge(QPointer(new Edge("TYPE_OF", genre, this)));
+            genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
+        }
     }
 
-    foreach(const auto& e, m_entities) {
-        qDebug() << e->getType() << e->getKey() << e->getValue();
+    qDebug() << m_entities.length();
+    qDebug() << entityMap.keys().length();
 
-        foreach(const auto& edge, e->getEdges())
-            qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
+    foreach(const auto& e, entityMap.values()) {
+//        if (e->getType() == "PERFORMER") {
+            qDebug() << e->getType() << e->getKey() << e->getValue();
+
+            foreach(const auto& edge, e->getEdges())
+                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
+//        }
     }
 }
 

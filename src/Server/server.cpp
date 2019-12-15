@@ -15,11 +15,11 @@ Server::Server(int port, QObject *parent)
 void Server::start()
 {
     m_graph = new KnowledgeGraph(QString("music"), this);
-    if (!this->listen(QHostAddress::Any, m_port)) {
-        qDebug() << "Could not start server on port" << m_port;
-    } else {
-        qDebug() << "Listening on port" << m_port;
-    }
+//    if (!this->listen(QHostAddress::Any, m_port)) {
+//        qDebug() << "Could not start server on port" << m_port;
+//    } else {
+//        qDebug() << "Listening on port" << m_port;
+//    }
 }
 
 void Server::incomingConnection(qintptr handle)
