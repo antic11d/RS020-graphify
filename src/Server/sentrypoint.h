@@ -11,10 +11,7 @@
 class SEntryPoint : public Entity
 {
 public:
-    SEntryPoint(QString key, QString value, QObject *parent);
-
-private:
-    QVector<Edge*> m_edges;
+    SEntryPoint(QString key, QString value, QPointer<Metadata> metadata = nullptr, QObject *parent = nullptr);
 };
 
 #endif // SENTRYPOINT_H

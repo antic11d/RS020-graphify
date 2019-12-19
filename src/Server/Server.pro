@@ -22,6 +22,7 @@ SOURCES += \
         gentrypoint.cpp \
         knowledgegraph.cpp \
         main.cpp \
+        metadata.cpp \
         pentrypoint.cpp \
         performer.cpp \
         sentrypoint.cpp \
@@ -40,6 +41,7 @@ HEADERS += \
     genre.h \
     gentrypoint.h \
     knowledgegraph.h \
+    metadata.h \
     pentrypoint.h \
     performer.h \
     sentrypoint.h \

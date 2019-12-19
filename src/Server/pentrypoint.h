@@ -12,7 +12,7 @@ class PEntryPoint : public Entity
 {
     Q_OBJECT
 public:
-    explicit PEntryPoint(QString key, QString value, QObject *parent = nullptr);
+    explicit PEntryPoint(QString key, QString value, QPointer<Metadata> metadata = nullptr, QObject *parent = nullptr);
     ~PEntryPoint();
 private:
     QVector<Edge*> m_edges;

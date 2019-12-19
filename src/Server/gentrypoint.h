@@ -8,7 +8,7 @@
 class GEntryPoint : public Entity
 {
 public:
-    GEntryPoint(QString key, QString value, QObject *parent);
+    GEntryPoint(QString key, QString value, QPointer<Metadata> metadata = nullptr, QObject *parent = nullptr);
     ~GEntryPoint();
 
 private:

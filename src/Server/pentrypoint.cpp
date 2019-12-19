@@ -1,7 +1,7 @@
 #include "pentrypoint.h"
 
-PEntryPoint::PEntryPoint(QString key, QString value, QObject *parent)
-    : Entity(key, value, "PERFORMER", parent)
+PEntryPoint::PEntryPoint(QString key, QString value, QPointer<Metadata> metadata, QObject *parent)
+    : Entity(key, value, "PERFORMER", metadata, parent)
 {
 
 }

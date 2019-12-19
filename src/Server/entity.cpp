@@ -1,10 +1,11 @@
 #include "entity.h"
 
-Entity::Entity(QString key, QString value, QString type, QObject *parent)
+Entity::Entity(QString key, QString value, QString type, QPointer<Metadata> metadata, QObject *parent)
     : QObject(parent)
     , m_key(key)
     , m_value(value)
     , m_type(type)
+    , m_metadata(metadata)
 {}
 
 Entity::~Entity()
@@ -34,4 +35,10 @@ QString Entity::getType() const
 {
     return m_type;
 }
+
+QString Entity::getMetadataValue() const
+{
+    return m_metadata->getStrVal();
+}
+
 

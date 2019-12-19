@@ -7,7 +7,7 @@ class Genre : public Entity
 {
     Q_OBJECT
 public:
-    Genre(QString key, QString value, QObject *parent = nullptr);
+    Genre(QString key, QString value, QPointer<Metadata> metadata, QObject *parent = nullptr);
 };
 
 #endif // GENRE_H

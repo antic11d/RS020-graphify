@@ -37,7 +37,13 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
 
     if (!entityMap->contains(parsedId)) {
         QString label = v.toObject().value(field+"Label").toString();
-        Entity* parsed = new T(parsedId, label, this);
+        Entity* parsed;
+        if (field == "title") {
+            parsed = new T(parsedId, label, QPointer(new Metadata("url")), this);
+        } else {
+            parsed = new T(parsedId, label, nullptr, this);
+        }
+
         entityMap->insert(parsedId, parsed);
         m_entities.push_back(QPointer(parsed));
 
@@ -67,16 +73,35 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
         }
     }
 
-    qDebug() << m_entities.length();
-    qDebug() << entityMap.keys().length();
-
     foreach(const auto& e, entityMap.values()) {
-//        if (e->getType() == "PERFORMER") {
+        if (e->getType() == "PERFORMER") {
             qDebug() << e->getType() << e->getKey() << e->getValue();
 
             foreach(const auto& edge, e->getEdges())
                 qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-//        }
+        }
+    }
+
+    qDebug() << "====================================";
+
+    foreach(const auto& e, entityMap.values()) {
+        if (e->getType() == "SONG") {
+            qDebug() << e->getType() << e->getKey() << e->getValue();
+
+            foreach(const auto& edge, e->getEdges())
+                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
+        }
+    }
+
+    qDebug() << "====================================";
+
+    foreach(const auto& e, entityMap.values()) {
+        if (e->getType() == "GENRE") {
+            qDebug() << e->getType() << e->getKey() << e->getValue();
+
+            foreach(const auto& edge, e->getEdges())
+                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
+        }
     }
 }
 
