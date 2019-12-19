@@ -1,36 +1,57 @@
 #include "transport.h"
 #include <QDebug>
 
-Transport::Transport(const QUrl &url, bool debug, QObject *parent)
+Transport::Transport(const QString& hostname, quint16 port, bool debug, QObject *parent)
     : QObject(parent)
-    , m_url(url)
+    , m_hostname(hostname)
+    , m_port(port)
+    , m_socket(new QTcpSocket(this))
     , m_debug(debug)
 {
-    if (m_debug)
-        qDebug() << "Socket on url: " << url;
+    m_in.setDevice(m_socket);
+    m_in.setVersion(QDataStream::Qt_5_5);
 
-    connect(&m_socket, &QWebSocket::connected, this, &Transport::onConnected);
-    connect(&m_socket, &QWebSocket::disconnected, this, &Transport::closed);
-    m_socket.open(QUrl(url));
+    connect(m_socket, &QIODevice::readyRead, this, &Transport::readData);
+    if (m_debug)
+        qDebug() << "Transport up";
 }
 
-void Transport::onConnected()
+// Helper serialization
+static QByteArray intToArray(qint32 source)
 {
-    if (m_debug)
-        qDebug() << "Socket connected";
-
-    connect(&m_socket, &QWebSocket::textMessageReceived,
-            this, &Transport::onMessageRecieved);
-
-    m_socket.sendTextMessage(QStringLiteral("Give me trail"));
+    QByteArray temp;
+    QDataStream data(&temp, QIODevice::ReadWrite);
+    data << source;
+    return temp;
 }
 
-QString Transport::onMessageRecieved(QString msg)
+//TODO should be attached as button SEND callback
+bool Transport::writeData(QString song, QString genre, QString performer) const
 {
+    if (m_socket->state() == QAbstractSocket::ConnectedState) {
+        m_socket->write((song+","+genre+","+performer).toUtf8());
+
+        return m_socket->waitForBytesWritten();
+    } else
+        return false;
+}
+
+//TODO should be attached as button CONNECT callback
+bool Transport::connectToHost() const
+{
+    m_socket->abort(); // interrupt in progress request if there is one
+    m_socket->connectToHost(m_hostname, m_port);
+
     if (m_debug)
-        qDebug() << "Recieved: " << msg;
+        qDebug() << "Contacting server: " << m_hostname << m_port;
 
-    m_socket.close();
+    return m_socket->waitForConnected();
+}
 
-    return msg;
+void Transport::readData()
+{
+    QString msg = m_socket->readAll();
+
+    qDebug() << "Got graph data" << msg;
+
 }

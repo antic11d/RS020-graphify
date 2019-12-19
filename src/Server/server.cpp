@@ -1,8 +1,6 @@
 #include "server.h"
 #include "worker.h"
 
-
-
 Server::Server(int port, QObject *parent)
     : QTcpServer(parent)
     , m_port(port)
@@ -24,10 +22,14 @@ void Server::start()
 
 void Server::incomingConnection(qintptr handle)
 {
-    qDebug() << handle << " connecting...";
-    QString url = urls.at(QRandomGenerator::global()->bounded(urls.size()));
+    qDebug() << "Handle" << handle << "connecting...";
 
-    Worker *worker = new Worker(handle, url);
+    Worker *worker = new Worker(handle, m_graph, this);
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     worker->start();
+}
+
+Server::~Server()
+{
+    this->close();
 }

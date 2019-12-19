@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QWebEngineView>
 
+#include "transport.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -19,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QWebEngineView *m_view;
+    Transport *m_transport;
 
     void initializeResources();
 };

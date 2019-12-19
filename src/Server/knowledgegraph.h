@@ -20,6 +20,7 @@ class KnowledgeGraph : public QObject
     Q_OBJECT
 public:
     KnowledgeGraph(const QString category, QObject *parent);
+    QVector<QString> traverse(const QString &query) const;
 
 private:
     QVector<QPair<QString, QString>> m_category {
@@ -28,12 +29,12 @@ private:
     QVector<QPointer<Entity>> m_entities;
     QFile *m_inFile = new QFile(this);
 
-
-
     void initalizeGraph();
     void parseJsonEntities(const QJsonArray &arr);
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
+    QVector<QString> packData(QVector<Song*> data) const;
+
 };
 
 #endif // KNOWLEDGEGRAPH_H

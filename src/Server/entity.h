@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVector>
 #include <QPointer>
+#include <QDebug>
 #include "edge.h"
 #include "metadata.h"
 

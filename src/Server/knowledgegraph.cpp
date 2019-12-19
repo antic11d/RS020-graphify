@@ -72,7 +72,7 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
             genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
         }
     }
-
+/*
     foreach(const auto& e, entityMap.values()) {
         if (e->getType() == "PERFORMER") {
             qDebug() << e->getType() << e->getKey() << e->getValue();
@@ -102,7 +102,7 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
             foreach(const auto& edge, e->getEdges())
                 qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
         }
-    }
+    }*/
 }
 
 KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
@@ -115,6 +115,35 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
     }
 
     initalizeGraph();
+}
+
+QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
+{
+    qDebug() << "Packing data...";
+    QVector<QString> result;
+    foreach(auto &s, data) {
+        result.push_back(QString(
+                          s->getValue()+","
+                         +s->getMetadataValue()+","
+                         +s->getRelatedEntity("TYPE_OF")+","
+                         +s->getRelatedEntity("PERFORMED_BY")
+                                 ));
+    }
+
+    qDebug() << "Packed:" << result;
+
+
+    return result;
+}
+
+QVector<QString> KnowledgeGraph::traverse(const QString &query) const
+{
+    //TODO implement traversing
+    qDebug() << "About to start traversing";
+
+    auto vec = QVector<Song*>{new Song("asd", "asdasd", new Metadata("null_url", nullptr), nullptr), new Song("zxc", "zxczxc", new Metadata("null_url", nullptr), nullptr)};
+
+    return packData(vec);
 }
 
 

@@ -18,23 +18,13 @@ Song& Song::operator=(Song other)
     return *this;
 }
 
-QDataStream &operator<<(QDataStream &out, const Song &s)
+
+QString Song::getRelatedEntity(QString edgeType) const
 {
-    out << s.getKey() << s.getValue() << s.getMetadataValue();
-    return out;
+    foreach(auto &e, getEdges()) {
+        if (e->getType() == edgeType)
+            return e->getPointsTo()->getValue();
+    }
+
+    return "";
 }
-
-QDataStream &operator>>(QDataStream &in, Song &s)
-{
-    QString key;
-    QString value;
-    QString metadata;
-
-    in >> key >> value >> metadata;
-
-    s = Song(key, value, QPointer(new Metadata(metadata)), nullptr);
-
-    return in;
-}
-
-
