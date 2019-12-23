@@ -38,9 +38,9 @@ void Worker::readyRead()
 //    qDebug() << "Got query" << stringified;
 
     //TODO start traversal through graph
-    auto data = m_graph->traverse(stringified);
+//    auto data = m_graph->traverse(stringified);
 
-    sendData(data);
+//    sendData(data);
 }
 
 bool Worker::sendData(QVector<QString> data)

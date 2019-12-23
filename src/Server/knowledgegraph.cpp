@@ -25,6 +25,25 @@ void KnowledgeGraph::initalizeGraph()
     parseJsonEntities(jsonArray);
 }
 
+void KnowledgeGraph::connect_to_entry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities) {
+
+    if(e == nullptr || connectedEntities->contains(e->getKey()))
+        return;
+
+    if (flag == "s") {
+        m_sentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+        qDebug() << "\t" << m_sentries[0]->getValue() << "CONTAINS " << e->getKey() << "\n";
+    }
+    if (flag == "g") {
+        m_gentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+    }
+    if (flag == "p") {
+        m_pentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+    }
+
+    connectedEntities->insert(e->getKey(), e);
+}
+
 template <typename T>
 QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPointer<Entity>>* entityMap, const QString &field)
 {
@@ -55,14 +74,24 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
 }
 
 
+
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
+    m_pentries.push_back(QPointer(new PEntryPoint("P1", "P1")));
+    m_sentries.push_back(QPointer(new SEntryPoint("S1", "S1")));
+    m_gentries.push_back(QPointer(new GEntryPoint("G1", "G1")));
     QMap<QString, QPointer<Entity>> entityMap;
+    QMap<QString, QPointer<Entity>> connectedEntities;
     QSet<QString> knownEntites;
     foreach(const QJsonValue &v, arr) {
         auto song = parse<Song>(v, &entityMap, "title");
         auto performer = parse<Performer>(v, &entityMap, "performer");
         auto genre = parse<Genre>(v, &entityMap, "genre");
+
+        connect_to_entry(song, "s", &connectedEntities);
+        connect_to_entry(performer, "p", &connectedEntities);
+        connect_to_entry(genre, "g", &connectedEntities);
+
 
 //        Connect the dots
         performer->addEdge(QPointer(new Edge("SINGS", song, this)));
@@ -115,6 +144,7 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
     }
 
     initalizeGraph();
+    prepareQuery("Shakira::Waka::hip hop music");
 }
 
 QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
@@ -136,14 +166,79 @@ QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
     return result;
 }
 
-QVector<QString> KnowledgeGraph::traverse(const QString &query) const
-{
-    //TODO implement traversing
-    qDebug() << "About to start traversing";
-
-    auto vec = QVector<Song*>{new Song("asd", "asdasd", new Metadata("null_url", nullptr), nullptr), new Song("zxc", "zxczxc", new Metadata("null_url", nullptr), nullptr)};
-
-    return packData(vec);
+void KnowledgeGraph::prepareQuery(const QString &query) {
+    QStringList query_params = query.split("::");
+    auto res = traverse(query_params[0], query_params[1], query_params[2]);
 }
+
+QVector<QString> KnowledgeGraph::traverse(const QString &performer, const QString &title, const QString &genre) const
+{
+    return traversePerformerGenre(performer, genre);
+}
+
+QVector<QString> KnowledgeGraph::traversePerformerGenre(const QString &performer, const QString &genre) const
+{
+
+    QVector<QString> mock_up;
+    QVector<QPointer<Edge>> e_performers;
+    QVector<QPointer<Edge>> e_songs;
+    QVector<QPointer<Entity>> _performers;
+    QVector<QVector<Edge>> _songs;
+    auto starting_entry = m_pentries[0];
+
+    auto all_performers = starting_entry->getEdges();
+    std::copy_if(all_performers.begin(),all_performers.end(), std::back_inserter(e_performers) ,
+                 [&performer](QPointer<Edge> e){return e->getPointsTo()->getValue() == performer;});
+
+    std::transform(e_performers.cbegin(), e_performers.cend(),
+                   std::back_inserter(_performers),
+                   [](QPointer<Edge> e){return e->getPointsTo();});
+
+    QVector<QPointer<Edge>> all_songs;
+    for (auto p : _performers) {
+        auto all_p_edges = p->getEdges();
+        std::copy_if(all_p_edges.begin(),all_p_edges.end(), std::back_inserter(all_songs) ,
+                     [](QPointer<Edge> e){
+                        return e->getType() == "SINGS";
+                    });
+    }
+
+//    QVector<QPointer<Edge>> all_valid_songs;
+//    std::copy_if(all_songs.begin(),all_songs.end(), std::back_inserter(all_valid_songs) ,
+//                 [&genre](QPointer<Edge> song){
+//        for (auto song_edge : song->getPointsTo()->getEdges()) {
+//            return song_edge->getType() == "TYPE_OF" && song_edge->getPointsTo()->getValue() == genre;
+//        }
+//    });
+
+
+//    for (auto i : e_performers) {
+//        qDebug() << i->getPointsTo()->getValue() << " ";
+//        for (auto e : i->getPointsTo()->getEdges()) {
+//            if (e->getType() == "SINGS") {
+//                auto song = e->getPointsTo();
+//                for (auto &s : song->getEdges()) {
+//                    if (s->getType() == "TYPE_OF" && s->getPointsTo()->getValue() == genre) {
+//                        qDebug() << song->getValue();
+//                    }
+//                }
+//            }
+
+//        }
+//    }
+
+    for (auto song : all_songs) {
+        for(auto song_edge : song->getPointsTo()->getEdges()) {
+            if (song_edge->getType() == "TYPE_OF" && song_edge->getPointsTo()->getValue() == genre) {
+                mock_up.push_back(song->getPointsTo()->getValue());
+            }
+        }
+    }
+    for (auto v : mock_up){
+        qDebug() << v;
+    }
+    return mock_up;
+}
+
 
 

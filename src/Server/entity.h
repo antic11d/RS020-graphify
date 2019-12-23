@@ -24,6 +24,8 @@ public:
     QString getType() const;
     QString getMetadataValue() const;
 
+    void setEdges(const QVector<QPointer<Edge> > &edges);
+
 protected:
     QString m_key;
     QString m_value;

@@ -41,4 +41,9 @@ QString Entity::getMetadataValue() const
     return m_metadata->getStrVal();
 }
 
+void Entity::setEdges(const QVector<QPointer<Edge> > &edges)
+{
+    m_edges = edges;
+}
+
 

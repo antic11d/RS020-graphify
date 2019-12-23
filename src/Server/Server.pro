@@ -25,9 +25,11 @@ SOURCES += \
         metadata.cpp \
         pentrypoint.cpp \
         performer.cpp \
+        performergenretraverse.cpp \
         sentrypoint.cpp \
         server.cpp \
         song.cpp \
+        traversebehavior.cpp \
         worker.cpp
 
 # Default rules for deployment.
@@ -44,9 +46,11 @@ HEADERS += \
     metadata.h \
     pentrypoint.h \
     performer.h \
+    performergenretraverse.h \
     sentrypoint.h \
     server.h \
     song.h \
+    traversebehavior.h \
     worker.h
 
 RESOURCES += \
