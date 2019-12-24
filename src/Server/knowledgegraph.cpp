@@ -54,7 +54,7 @@ void KnowledgeGraph::initalizeGraph()
     parseJsonEntities(jsonArray);
 }
 
-void KnowledgeGraph::connect_to_entry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities) {
+void KnowledgeGraph::connectToEntry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities) {
 
     if(e == nullptr || connectedEntities->contains(e->getKey()))
         return;
@@ -120,9 +120,9 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
         auto performer = parse<Performer>(v, &entityMap, "performer");
         auto genre = parse<Genre>(v, &entityMap, "genre");
 
-        connect_to_entry(song, "s", &connectedEntities);
-        connect_to_entry(performer, "p", &connectedEntities);
-        connect_to_entry(genre, "g", &connectedEntities);
+        connectToEntry(song, "s", &connectedEntities);
+        connectToEntry(performer, "p", &connectedEntities);
+        connectToEntry(genre, "g", &connectedEntities);
 
 
 //        Connect the dots
@@ -176,11 +176,11 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
     }
 
     initalizeGraph();
-    traverse_process("Shakira::::hip hop music");
+    traverseProcess("Shakira::::hip hop music");
 
 }
 
-QVector<QString> KnowledgeGraph::traverse_process(const QString &query) {
+QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
     QPair<QStringList, int> prepared = prepareQuery(query);
     QVector<QString> res = traverse(prepared.first, prepared.second);
     return res;

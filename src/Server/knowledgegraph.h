@@ -28,7 +28,7 @@ class KnowledgeGraph : public QObject
 public:
     KnowledgeGraph(const QString category, QObject *parent);
     QVector<QString> traverse(const QStringList &query_params, const int &t_case) const;
-    QVector<QString> traverse_process(const QString &query);
+    QVector<QString> traverseProcess(const QString &query);
 
 private:
     QVector<QPair<QString, QString>> m_category {
@@ -42,7 +42,7 @@ private:
 
     void initalizeGraph();
     void parseJsonEntities(const QJsonArray &arr);
-    void connect_to_entry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities);
+    void connectToEntry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities);
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
     QVector<QString> packData(QVector<Song*> data) const;
