@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QJsonArray>
 #include <QVector>
+#include <QPair>
 #include <algorithm>
 #include <iterator>
 #include "entity.h"
@@ -19,24 +20,24 @@
 #include "gentrypoint.h"
 #include "pentrypoint.h"
 #include "sentrypoint.h"
+#include "performergenretraverse.h"
 
 class KnowledgeGraph : public QObject
 {
     Q_OBJECT
 public:
     KnowledgeGraph(const QString category, QObject *parent);
-    void prepareQuery(const QString &query);
-    QVector<QString> traverse(const QString &performer, const QString &title, const QString &genre) const;
-    QVector<QString> traversePerformerGenre(const QString &performer, const QString &genre) const;
+    QVector<QString> traverse(const QStringList &query_params, const int &t_case) const;
+    QVector<QString> traverse_process(const QString &query);
 
 private:
     QVector<QPair<QString, QString>> m_category {
         QPair(QString("music"), QString(":/data/query.json"))
     };
     QVector<QPointer<Entity>> m_entities;
-    QVector<QPointer<PEntryPoint>> m_pentries;
-    QVector<QPointer<SEntryPoint>> m_sentries;
-    QVector<QPointer<GEntryPoint>> m_gentries;
+    QVector<QPointer<Entity>> m_pentries;
+    QVector<QPointer<Entity>> m_sentries;
+    QVector<QPointer<Entity>> m_gentries;
     QFile *m_inFile = new QFile(this);
 
     void initalizeGraph();

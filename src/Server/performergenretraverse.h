@@ -1,11 +1,13 @@
 #ifndef PERFORMERGENRETRAVERSE_H
 #define PERFORMERGENRETRAVERSE_H
 
+#include "traversebehavior.h"
+#include "qdebug.h"
 
-class PerformerGenreTraverse
+class PerformerGenreTraverse : public TraverseBehavior
 {
 public:
-    PerformerGenreTraverse();
+    virtual void traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const override;
 };
 
 #endif // PERFORMERGENRETRAVERSE_H
