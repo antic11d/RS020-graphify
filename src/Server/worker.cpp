@@ -35,24 +35,34 @@ void Worker::readyRead()
 
     QString stringified = bytesToString(buff);
 
-//    qDebug() << "Got query" << stringified;
+    qDebug() << "Got query" << stringified;
 
-    //TODO start traversal through graph
-//    auto data = m_graph->traverse(stringified);
+    //TODO nek bude stringified
+    //Query se s fronta pravi tako da dodje Performer::Song::Genre
+    //Ima pesma trap, nemoj se zbunis bato dobri
+    QVector<QString> res = m_graph->traverseProcess("Shakira::::");
+    for (auto r : res) {
+        qDebug() << "hopa " << r;
+    }
 
-//    sendData(data);
+    sendData(res);
 }
 
 bool Worker::sendData(QVector<QString> data)
 {
-    QString packedData = data.toList().join("-");
-    if (m_socket->state() == QAbstractSocket::ConnectedState) {
-        qDebug() << "Sending graph data";
-        m_socket->write(packedData.toUtf8());
+    QDataStream stream(m_socket);
+//    stream << QString("Picko\n").toUtf8();
+    stream << data;
+//    stream << QString("Picko\n").toUtf8();
+//    QString packedData = data.toList().join("-");
+//    if (m_socket->state() == QAbstractSocket::ConnectedState) {
+//        qDebug() << "Sending graph data";
+//        m_socket->write(packedData.toUtf8());
 
-        return m_socket->waitForBytesWritten();
-    } else
-        return false;
+//        return m_socket->waitForBytesWritten();
+//    } else
+//        return false;
+    return true;
 }
 
 void Worker::disconnected()

@@ -87,7 +87,7 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         QString label = v.toObject().value(field+"Label").toString();
         Entity* parsed;
         if (field == "title") {
-            parsed = new T(parsedId, label, QPointer(new Metadata("url")), this);
+            parsed = new T(parsedId, label, QPointer(new Metadata("url", "https://www.youtube.com/embed/u-ndajHaih8")), this);
         } else {
             parsed = new T(parsedId, label, nullptr, this);
         }
@@ -177,10 +177,10 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
-    QVector<QString> res = traverseProcess("::Trap::");
-    for (auto r : res) {
-        qDebug() << "hopa " << r;
-    }
+//    QVector<QString> res = traverseProcess("::Trap::");
+//    for (auto r : res) {
+//        qDebug() << "hopa " << r;
+//    }
 
 }
 
@@ -219,6 +219,7 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
         case 2:
             t = &sT;
             res = t->traverse(query_params, m_sentries);
+            break;
         case 4:
             t = &pT;
             res = t->traverse(query_params, m_pentries);

@@ -4,7 +4,7 @@ QVector<QString> PerformerGenreTraverse::traverse(const QStringList &query, cons
     QString performer = query[0];
     QString genre = query[1];
 
-    QVector<QString> mock_up;
+    QVector<QString> res;
     QVector<QPointer<Edge>> e_performers;
     QVector<QPointer<Edge>> e_songs;
     QVector<QPointer<Entity>> _performers;
@@ -31,13 +31,10 @@ QVector<QString> PerformerGenreTraverse::traverse(const QStringList &query, cons
     for (auto song : all_songs) {
         for(auto song_edge : song->getPointsTo()->getEdges()) {
             if (song_edge->getType() == "TYPE_OF" && song_edge->getPointsTo()->getValue() == genre) {
-                mock_up.push_back(song->getPointsTo()->getValue());
+                res.push_back(song->getPointsTo()->getMetadata()->getUrl());
             }
         }
     }
-    for (auto v : mock_up){
-        qDebug() << v;
-    }
 
-    return mock_up;
+    return res;
 }

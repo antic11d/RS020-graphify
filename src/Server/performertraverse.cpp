@@ -26,7 +26,7 @@ QVector<QString> PerformerTraverse::traverse(const QStringList &query, const QVe
 
 
     for (auto song : all_songs) {
-        res.push_back(song->getPointsTo()->getValue());
+        res.push_back(song->getPointsTo()->getMetadata()->getUrl());
     }
 
     return res;

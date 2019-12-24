@@ -10,7 +10,7 @@ QVector<QString> SongTraverse::traverse(const QStringList &query, const QVector<
 
     for(auto e_song : starting_entry->getEdges()) {
         if (e_song->getPointsTo()->getValue() == song)
-            res.push_back(e_song->getPointsTo()->getValue());
+            res.push_back(e_song->getPointsTo()->getMetadata()->getUrl());
     }
 
     return res;
