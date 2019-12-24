@@ -4,6 +4,8 @@
 #include <QWebEngineView>
 #include <QWebEngineSettings>
 #include <QListWidget>
+#include <QBrush>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -11,9 +13,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QListWidgetItem *newItem = new QListWidgetItem;
-    newItem->setText(QString("Alkohola poplava"));
-    ui->listWidget->insertItem(1, newItem);
+//    QListWidgetItem *newItem = new QListWidgetItem;
+//    newItem->setText(QString("Alkohola poplava"));
+//    ui->listWidget->insertItem(1, newItem);
+
+//    QGraphicsView *view1 = new QGraphicsView(ui->gvFirst);
+    QPixmap pix("/home/andrija/RS020-graphify/src/resources/images/slika.png");
+    pix = pix.scaled(ui->gvFirst->size());
+    QPalette palette;
+    palette.setBrush(QPalette::Base, pix);
+    ui->gvFirst->setPalette(palette);
+
+
 
     QWebEngineView *view = new QWebEngineView(ui->graphicsView);
     view->load(QUrl(QStringLiteral("qrc:/view.html")));
