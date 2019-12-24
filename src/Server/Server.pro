@@ -26,9 +26,11 @@ SOURCES += \
         pentrypoint.cpp \
         performer.cpp \
         performergenretraverse.cpp \
+        performertraverse.cpp \
         sentrypoint.cpp \
         server.cpp \
         song.cpp \
+        songtraverse.cpp \
         traversebehavior.cpp \
         worker.cpp
 
@@ -47,9 +49,11 @@ HEADERS += \
     pentrypoint.h \
     performer.h \
     performergenretraverse.h \
+    performertraverse.h \
     sentrypoint.h \
     server.h \
     song.h \
+    songtraverse.h \
     traversebehavior.h \
     worker.h
 

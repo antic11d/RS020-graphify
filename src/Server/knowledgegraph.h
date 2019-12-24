@@ -21,6 +21,8 @@
 #include "pentrypoint.h"
 #include "sentrypoint.h"
 #include "performergenretraverse.h"
+#include "performertraverse.h"
+#include "songtraverse.h"
 
 class KnowledgeGraph : public QObject
 {

@@ -1,6 +1,6 @@
 #include "performergenretraverse.h"
 
-void PerformerGenreTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+QVector<QString> PerformerGenreTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
     QString performer = query[0];
     QString genre = query[1];
 
@@ -39,4 +39,5 @@ void PerformerGenreTraverse::traverse(const QStringList &query, const QVector<QP
         qDebug() << v;
     }
 
+    return mock_up;
 }
