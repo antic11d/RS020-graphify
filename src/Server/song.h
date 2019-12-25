@@ -12,11 +12,9 @@ class Song : public Entity
 public:
     Song(QString key, QString value, QPointer<Metadata> metadata = nullptr, QObject *parent = nullptr);
     ~Song();
+    QString getRelatedEntity(QString edgeType) const;
 
     Song& operator=(Song other);
 };
-
-QDataStream &operator<<(QDataStream &out, const Song &s);
-QDataStream &operator>>(QDataStream &out, Song &s);
 
 #endif // SONG_H

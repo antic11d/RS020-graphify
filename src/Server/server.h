@@ -12,6 +12,7 @@ class Server : public QTcpServer
     Q_OBJECT
 public:
     explicit Server(int port, QObject *parent = nullptr);
+    ~Server() override;
     void start();
 
 signals:

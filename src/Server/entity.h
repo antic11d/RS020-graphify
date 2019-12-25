@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVector>
 #include <QPointer>
+#include <QDebug>
 #include "edge.h"
 #include "metadata.h"
 
@@ -22,6 +23,9 @@ public:
     QString getValue() const;
     QString getType() const;
     QString getMetadataValue() const;
+    QPointer<Metadata> getMetadata() const;
+
+    void setEdges(const QVector<QPointer<Edge> > &edges);
 
 protected:
     QString m_key;
