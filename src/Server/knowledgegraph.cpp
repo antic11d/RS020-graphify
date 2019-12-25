@@ -1,5 +1,34 @@
 #include "knowledgegraph.h"
 
+//Helper functions
+int prepareArray(QStringList &query_params) {
+    QString res;
+    QMutableStringListIterator it(query_params);
+
+    while(it.hasNext() == true) {
+        auto value = it.next();
+        if (value == "") {
+            res.push_back("0");
+            it.remove();
+        }
+        else {
+            res.push_back("1");
+        }
+    }
+    bool ok;
+    return res.toInt(&ok, 2);
+}
+
+QPair<QStringList, int> prepareQuery(const QString &query) {
+    QStringList query_params = query.split("::");
+    int t_case = prepareArray(query_params);
+    for (auto i : query_params) {
+        qDebug() << i;
+    }
+    return QPair<QStringList, int>(query_params, t_case);
+}
+
+
 void KnowledgeGraph::initalizeGraph()
 {
     qDebug() << "Reading file on path " << m_inFile->fileName();
@@ -25,6 +54,25 @@ void KnowledgeGraph::initalizeGraph()
     parseJsonEntities(jsonArray);
 }
 
+void KnowledgeGraph::connectToEntry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities) {
+
+    if(e == nullptr || connectedEntities->contains(e->getKey()))
+        return;
+
+    if (flag == "s") {
+        m_sentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+        qDebug() << "\t" << m_sentries[0]->getValue() << "CONTAINS " << e->getKey() << "\n";
+    }
+    if (flag == "g") {
+        m_gentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+    }
+    if (flag == "p") {
+        m_pentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
+    }
+
+    connectedEntities->insert(e->getKey(), e);
+}
+
 template <typename T>
 QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPointer<Entity>>* entityMap, const QString &field)
 {
@@ -39,7 +87,7 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         QString label = v.toObject().value(field+"Label").toString();
         Entity* parsed;
         if (field == "title") {
-            parsed = new T(parsedId, label, QPointer(new Metadata("url")), this);
+            parsed = new T(parsedId, label, QPointer(new Metadata("url", "https://www.youtube.com/embed/u-ndajHaih8")), this);
         } else {
             parsed = new T(parsedId, label, nullptr, this);
         }
@@ -55,14 +103,27 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
 }
 
 
+
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
+    Entity *p = new PEntryPoint("P1", "P1");
+    m_pentries.push_back(QPointer(p));
+    p = new SEntryPoint("S1", "S1");
+    m_sentries.push_back(QPointer(p));
+    p = new GEntryPoint("G1", "G1");
+    m_gentries.push_back(QPointer(p));
     QMap<QString, QPointer<Entity>> entityMap;
+    QMap<QString, QPointer<Entity>> connectedEntities;
     QSet<QString> knownEntites;
     foreach(const QJsonValue &v, arr) {
         auto song = parse<Song>(v, &entityMap, "title");
         auto performer = parse<Performer>(v, &entityMap, "performer");
         auto genre = parse<Genre>(v, &entityMap, "genre");
+
+        connectToEntry(song, "s", &connectedEntities);
+        connectToEntry(performer, "p", &connectedEntities);
+        connectToEntry(genre, "g", &connectedEntities);
+
 
 //        Connect the dots
         performer->addEdge(QPointer(new Edge("SINGS", song, this)));
@@ -115,6 +176,18 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
     }
 
     initalizeGraph();
+
+//    QVector<QString> res = traverseProcess("::Trap::");
+//    for (auto r : res) {
+//        qDebug() << "hopa " << r;
+//    }
+
+}
+
+QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
+    QPair<QStringList, int> prepared = prepareQuery(query);
+    QVector<QString> res = traverse(prepared.first, prepared.second);
+    return res;
 }
 
 QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
@@ -136,14 +209,28 @@ QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
     return result;
 }
 
-QVector<QString> KnowledgeGraph::traverse(const QString &query) const
-{
-    //TODO implement traversing
-    qDebug() << "About to start traversing";
-
-    auto vec = QVector<Song*>{new Song("asd", "asdasd", new Metadata("null_url", nullptr), nullptr), new Song("zxc", "zxczxc", new Metadata("null_url", nullptr), nullptr)};
-
-    return packData(vec);
+QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const int &t_case) const {
+    QVector<QString> res;
+    PerformerGenreTraverse pgT;
+    PerformerTraverse pT;
+    SongTraverse sT;
+    TraverseBehavior *t = nullptr;
+    switch (t_case) {
+        case 2:
+            t = &sT;
+            res = t->traverse(query_params, m_sentries);
+            break;
+        case 4:
+            t = &pT;
+            res = t->traverse(query_params, m_pentries);
+            break;
+        case 5:
+            t = &pgT;
+            res = t->traverse(query_params, m_pentries);
+            break;
+        default:
+            break;
+    }
+    return res;
 }
-
 

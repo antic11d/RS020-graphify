@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     // collect values from search bar
     if (m_transport->writeData("some_song", "some_genre", "some_performer")) {
         qDebug() << "Write succeeded";
+        m_transport->readData();
     } else {
         qDebug() << "Write failed";
     }

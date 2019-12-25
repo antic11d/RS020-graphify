@@ -50,8 +50,25 @@ bool Transport::connectToHost() const
 
 void Transport::readData()
 {
-    QString msg = m_socket->readAll();
+//    QString msg = m_socket->readAll();
 
-    qDebug() << "Got graph data" << msg;
+//    qDebug() << "Got graph data" << msg;
+
+    QDataStream socketStream(m_socket);
+    QVector<QString> urls;
+//    QString url;
+    for (;;) {
+    socketStream.startTransaction();
+    socketStream >> urls;
+    if (socketStream.commitTransaction()) {
+        qDebug() << "Received :";
+        for (auto url : urls) {
+            qDebug() << url;
+        }
+    }
+
+    else
+        break;
+    }
 
 }
