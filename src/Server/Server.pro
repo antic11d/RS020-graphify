@@ -34,6 +34,7 @@ SOURCES += \
         song.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
+        user.cpp \
         worker.cpp
 
 # Default rules for deployment.
@@ -59,6 +60,7 @@ HEADERS += \
     song.h \
     songtraverse.h \
     traversebehavior.h \
+    user.h \
     worker.h
 
 RESOURCES += \
