@@ -36,7 +36,8 @@ public:
 
 private:
     QVector<QPair<QString, QString>> m_category {
-        QPair(QString("music"), QString(":/data/query.json"))
+        QPair(QString("music"), QString(":/data/query.json")),
+        QPair(QString("big_data"), QString(":/data/big_sample.json"))
     };
     QVector<QPointer<Entity>> m_entities;
     QVector<QPointer<Entity>> m_pentries;

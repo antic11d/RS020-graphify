@@ -40,7 +40,7 @@ void Worker::readyRead()
     //TODO nek bude stringified
     //Query se s fronta pravi tako da dodje Performer::Song::Genre
     //Ima pesma trap, nemoj se zbunis bato dobri
-    QVector<QString> res = m_graph->traverseProcess("Shakira::::");
+    QVector<QString> res = m_graph->traverseProcess("David Bowie::::");
     for (auto r : res) {
         qDebug() << "hopa " << r;
     }

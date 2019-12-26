@@ -86,7 +86,8 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         QString label = v.toObject().value(field+"Label").toString();
         Entity* parsed;
         if (field == "title") {
-            parsed = new T(parsedId, label, QPointer(new Metadata("url", "https://www.youtube.com/embed/u-ndajHaih8")), this);
+            QString ytLink = v.toObject().value("YouTube_video_ID").toString();
+            parsed = new T(parsedId, label, QPointer(new Metadata("url", ytLink)), this);
         } else {
             parsed = new T(parsedId, label, nullptr, this);
         }
