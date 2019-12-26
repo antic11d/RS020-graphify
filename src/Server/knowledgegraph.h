@@ -23,6 +23,8 @@
 #include "performergenretraverse.h"
 #include "performertraverse.h"
 #include "songtraverse.h"
+#include "cachedsong.h"
+#include "minheap.h"
 
 class KnowledgeGraph : public QObject
 {
