@@ -34,6 +34,7 @@ SOURCES += \
         song.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
+        uentrypoint.cpp \
         user.cpp \
         worker.cpp
 
@@ -60,6 +61,7 @@ HEADERS += \
     song.h \
     songtraverse.h \
     traversebehavior.h \
+    uentrypoint.h \
     user.h \
     worker.h
 

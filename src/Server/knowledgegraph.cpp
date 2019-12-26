@@ -105,12 +105,14 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
 
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
-    Entity *p = new PEntryPoint("P1", "P1");
+    Entity *p = new PEntryPoint("P1", "P1", nullptr, this);
     m_pentries.push_back(QPointer(p));
-    p = new SEntryPoint("S1", "S1");
+    p = new SEntryPoint("S1", "S1", nullptr, this);
     m_sentries.push_back(QPointer(p));
-    p = new GEntryPoint("G1", "G1");
+    p = new GEntryPoint("G1", "G1", nullptr, this);
     m_gentries.push_back(QPointer(p));
+    p = new UEntryPoint("U1", "U1", nullptr, this);
+    m_uentries.push_back(QPointer(p));
     QMap<QString, QPointer<Entity>> entityMap;
     QMap<QString, QPointer<Entity>> connectedEntities;
     QSet<QString> knownEntites;
@@ -241,5 +243,11 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
             break;
     }
     return res;
+}
+
+void KnowledgeGraph::addUser(const QString &username, const QString passwd) {
+    Entity *new_user = new User(username, passwd, nullptr, this);
+    m_entities.push_back(QPointer(new_user));
+    m_uentries[0]->addEdge(QPointer(new Edge("CONTAINS", new_user, this)));
 }
 

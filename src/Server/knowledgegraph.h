@@ -17,6 +17,7 @@
 #include "performer.h"
 #include "song.h"
 #include "genre.h"
+#include "uentrypoint.h"
 #include "gentrypoint.h"
 #include "pentrypoint.h"
 #include "sentrypoint.h"
@@ -25,6 +26,7 @@
 #include "songtraverse.h"
 #include "cachedsong.h"
 #include "minheap.h"
+#include "user.h"
 
 class KnowledgeGraph : public QObject
 {
@@ -42,6 +44,7 @@ private:
     QVector<QPointer<Entity>> m_pentries;
     QVector<QPointer<Entity>> m_sentries;
     QVector<QPointer<Entity>> m_gentries;
+    QVector<QPointer<Entity>> m_uentries;
     QFile *m_inFile = new QFile(this);
 
     void initalizeGraph();
@@ -50,6 +53,7 @@ private:
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
 //    QVector<QString> packData(QVector<Song*> data) const;
+    void addUser(const QString &username, const QString passwd);
 
 };
 
