@@ -5,3 +5,8 @@ User::User(QString key, QString value, QPointer<Metadata> metadata, QObject *par
 {
 
 }
+
+void User::addSearch(const QPointer<Entity> &searchedSong)
+{
+    this->addEdge(QPointer(new Edge("LIKES", searchedSong, this)));
+}

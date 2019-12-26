@@ -45,6 +45,7 @@ private:
     QVector<QPointer<Entity>> m_sentries;
     QVector<QPointer<Entity>> m_gentries;
     QVector<QPointer<Entity>> m_uentries;
+    QMap<QString, QPointer<User>> m_users;
     QFile *m_inFile = new QFile(this);
 
     void initalizeGraph();
@@ -53,7 +54,8 @@ private:
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
 //    QVector<QString> packData(QVector<Song*> data) const;
-    void addUser(const QString &username, const QString passwd);
+    void addUser(const QString &username, const QString &passwd);
+    void strengthenGraph(const QString &username, const QString &title);
 
 };
 

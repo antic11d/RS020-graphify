@@ -178,15 +178,28 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
-    qDebug() << "Malo igranje sa hesom sad";
-    CachedSong c1(QString("aa"), QString("aa"), 1);
-    CachedSong c2(QString("bb"), QString("bb"), 1);
-    CachedSong c3(QString("cc"), QString("cc"), 3);
-    CachedSong c4(QString("dd"), QString("dd"), 4);
-    QVector<CachedSong> vec{c1, c2, c3, c4};
-    MinHeap cache(vec);
-    cache.add(QString("ff"));
-    cache.print();
+//    qDebug() << "Malo igranje sa hesom sad";
+//    CachedSong c1(QString("aa"), QString("aa"), 1);
+//    CachedSong c2(QString("bb"), QString("bb"), 1);
+//    CachedSong c3(QString("cc"), QString("cc"), 3);
+//    CachedSong c4(QString("dd"), QString("dd"), 4);
+//    QVector<CachedSong> vec{c1, c2, c3, c4};
+//    MinHeap cache(vec);
+//    cache.add(QString("ff"));
+//    cache.print();
+
+      qDebug() << "Idemo sad na usera";
+      addUser("andrija", "andrija");
+      strengthenGraph("andrija", "Trap");
+
+      auto user_e = m_uentries[0];
+      for(auto edge : user_e->getEdges()) {
+        auto user = edge->getPointsTo();
+        qDebug() << user->getValue();
+        for(auto u_edge : user->getEdges()) {
+            qDebug() << u_edge->getType() << u_edge->getPointsTo()->getValue();
+        }
+      }
 
 //    QVector<QString> res = traverseProcess("::Trap::");
 //    for (auto r : res) {
@@ -245,9 +258,33 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
     return res;
 }
 
-void KnowledgeGraph::addUser(const QString &username, const QString passwd) {
+void KnowledgeGraph::addUser(const QString &username, const QString &passwd) {
     Entity *new_user = new User(username, passwd, nullptr, this);
     m_entities.push_back(QPointer(new_user));
     m_uentries[0]->addEdge(QPointer(new Edge("CONTAINS", new_user, this)));
+//    m_users.insert(username, QPointer(new_user));
+}
+
+void KnowledgeGraph::strengthenGraph(const QString &username, const QString &title)
+{
+    QPointer<Entity> searchedSong = nullptr;
+    QPointer<Entity> user = nullptr;
+    auto song_e = m_sentries[0];
+    for (auto song : song_e->getEdges()){
+        if(song->getPointsTo()->getValue() == title) {
+            searchedSong = song->getPointsTo();
+        }
+    }
+
+    auto user_e = m_uentries[0];
+    for (auto tmpUser : user_e->getEdges()) {
+        qDebug() << tmpUser->getPointsTo()->getValue();
+        if (tmpUser->getPointsTo()->getValue() == username) {
+            user = tmpUser->getPointsTo();
+        }
+    }
+
+    user->addEdge(QPointer(new Edge("LIKES", searchedSong, this)));
+    searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
 }
 

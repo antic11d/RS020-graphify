@@ -8,6 +8,7 @@ class User : public Entity
     Q_OBJECT
 public:
     User(QString key, QString value, QPointer<Metadata> metadata, QObject *parent = nullptr);
+    void addSearch(const QPointer<Entity> &searchedSong);
 };
 
 #endif // USER_H
