@@ -14,6 +14,8 @@ public:
     ~Edge();
     QString getType() const;
     QPointer<Entity> getPointsTo() const;
+    void reinforce();
+    int getStrength();
 
 private:
     QString m_type;
