@@ -176,6 +176,16 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
+    qDebug() << "Malo igranje sa hesom sad";
+    CachedSong c1(QString("aa"), QString("aa"), 1);
+    CachedSong c2(QString("bb"), QString("bb"), 1);
+    CachedSong c3(QString("cc"), QString("cc"), 3);
+    CachedSong c4(QString("dd"), QString("dd"), 4);
+    QVector<CachedSong> vec{c1, c2, c3, c4};
+    MinHeap cache(vec);
+    cache.add(QString("ff"));
+    cache.print();
+
 //    QVector<QString> res = traverseProcess("::Trap::");
 //    for (auto r : res) {
 //        qDebug() << "hopa " << r;
