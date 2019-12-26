@@ -31,7 +31,7 @@ QPair<QStringList, int> prepareQuery(const QString &query) {
 
 void KnowledgeGraph::initalizeGraph()
 {
-    qDebug() << "Reading file on path " << m_inFile->fileName();
+//    qDebug() << "Reading file on path " << m_inFile->fileName();
 
     if (!m_inFile->exists()) {
         qDebug() << "File doesnt exists";
@@ -61,7 +61,6 @@ void KnowledgeGraph::connectToEntry(const QPointer<Entity> e, QString flag, QMap
 
     if (flag == "s") {
         m_sentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
-        qDebug() << "\t" << m_sentries[0]->getValue() << "CONTAINS " << e->getKey() << "\n";
     }
     if (flag == "g") {
         m_gentries[0]->addEdge(QPointer(new Edge("CONTAINS", e, this)));
@@ -190,24 +189,24 @@ QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
     return res;
 }
 
-QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
-{
-    qDebug() << "Packing data...";
-    QVector<QString> result;
-    foreach(auto &s, data) {
-        result.push_back(QString(
-                          s->getValue()+","
-                         +s->getMetadataValue()+","
-                         +s->getRelatedEntity("TYPE_OF")+","
-                         +s->getRelatedEntity("PERFORMED_BY")
-                                 ));
-    }
+//QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
+//{
+//    qDebug() << "Packing data...";
+//    QVector<QString> result;
+//    foreach(auto &s, data) {
+//        result.push_back(QString(
+//                          s->getValue()+","
+//                         +s->getMetadataValue()+","
+//                         +s->getRelatedEntity("TYPE_OF")+","
+//                         +s->getRelatedEntity("PERFORMED_BY")
+//                                 ));
+//    }
 
-    qDebug() << "Packed:" << result;
+//    qDebug() << "Packed:" << result;
 
 
-    return result;
-}
+//    return result;
+//}
 
 QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const int &t_case) const {
     QVector<QString> res;

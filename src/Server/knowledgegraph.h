@@ -47,7 +47,7 @@ private:
     void connectToEntry(const QPointer<Entity> e, QString flag, QMap<QString, QPointer<Entity>> *connectedEntities);
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
-    QVector<QString> packData(QVector<Song*> data) const;
+//    QVector<QString> packData(QVector<Song*> data) const;
 
 };
 
