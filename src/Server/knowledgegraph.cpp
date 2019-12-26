@@ -191,13 +191,13 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
       qDebug() << "Idemo sad na usera";
       addUser("andrija", "andrija");
       strengthenGraph("andrija", "Trap");
+      strengthenGraph("andrija", "Trap");
 
       auto user_e = m_uentries[0];
       for(auto edge : user_e->getEdges()) {
         auto user = edge->getPointsTo();
-        qDebug() << user->getValue();
         for(auto u_edge : user->getEdges()) {
-            qDebug() << u_edge->getType() << u_edge->getPointsTo()->getValue();
+            qDebug() << "Edges: " << u_edge->getType() << u_edge->getPointsTo()->getValue();
         }
       }
 
@@ -275,12 +275,19 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
             searchedSong = song->getPointsTo();
         }
     }
-
     auto user_e = m_uentries[0];
     for (auto tmpUser : user_e->getEdges()) {
-        qDebug() << tmpUser->getPointsTo()->getValue();
         if (tmpUser->getPointsTo()->getValue() == username) {
             user = tmpUser->getPointsTo();
+            for (auto user_edge : user->getEdges()) {
+                if (user_edge->getType() == "LIKES") {
+                    auto likedSong = user_edge->getPointsTo();
+                    if (likedSong->getValue() == title) {
+                        return;
+                    }
+
+                }
+            }
         }
     }
 
