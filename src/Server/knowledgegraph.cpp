@@ -270,12 +270,8 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
     QPointer<Entity> searchedSong = nullptr;
     QPointer<Entity> user = nullptr;
     auto song_e = m_sentries[0];
-    for (auto song : song_e->getEdges()){
-        if(song->getPointsTo()->getValue() == title) {
-            searchedSong = song->getPointsTo();
-        }
-    }
     auto user_e = m_uentries[0];
+
     for (auto tmpUser : user_e->getEdges()) {
         if (tmpUser->getPointsTo()->getValue() == username) {
             user = tmpUser->getPointsTo();
@@ -290,6 +286,12 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
             }
         }
     }
+    for (auto song : song_e->getEdges()){
+        if(song->getPointsTo()->getValue() == title) {
+            searchedSong = song->getPointsTo();
+        }
+    }
+
 
     user->addEdge(QPointer(new Edge("LIKES", searchedSong, this)));
     searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
