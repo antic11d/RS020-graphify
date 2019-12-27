@@ -86,7 +86,8 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         QString label = v.toObject().value(field+"Label").toString();
         Entity* parsed;
         if (field == "title") {
-            parsed = new T(parsedId, label, QPointer(new Metadata("url", "https://www.youtube.com/embed/u-ndajHaih8")), this);
+            QString ytLink = v.toObject().value("YouTube_video_ID").toString();
+            parsed = new T(parsedId, label, QPointer(new Metadata("url", ytLink)), this);
         } else {
             parsed = new T(parsedId, label, nullptr, this);
         }
@@ -176,15 +177,19 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
-    qDebug() << "Malo igranje sa hesom sad";
-    CachedSong c1(QString("aa"), QString("aa"), 1);
-    CachedSong c2(QString("bb"), QString("bb"), 1);
-    CachedSong c3(QString("cc"), QString("cc"), 3);
-    CachedSong c4(QString("dd"), QString("dd"), 4);
-    QVector<CachedSong> vec{c1, c2, c3, c4};
-    MinHeap cache(vec);
-    cache.add(QString("ff"));
-    cache.print();
+//    qDebug() << "Malo igranje sa hesom sad";
+//    CachedSong c1(QString("aa"), QString("aa"), 1);
+//    CachedSong c2(QString("bb"), QString("bb"), 1);
+//    CachedSong c3(QString("cc"), QString("cc"), 3);
+//    CachedSong c4(QString("dd"), QString("dd"), 4);
+//    QVector<CachedSong> vec{c1, c2, c3, c4};
+//    MinHeap cache(vec);
+//    cache.add(QString("ff"));
+//    auto res = cache.read();
+
+//    for(auto r : res) {
+//        qDebug() << r;
+//    }
 
 //    QVector<QString> res = traverseProcess("::Trap::");
 //    for (auto r : res) {
@@ -241,5 +246,16 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
             break;
     }
     return res;
+}
+
+QString KnowledgeGraph::findSongUrl(const QString &title)
+{
+    auto song_e = m_sentries[0];
+    for(auto song : song_e->getEdges()) {
+        if (song->getPointsTo()->getValue() == title) {
+            return song->getPointsTo()->getMetadata()->getUrl();
+        }
+    }
+    return nullptr;
 }
 
