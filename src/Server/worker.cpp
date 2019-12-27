@@ -36,9 +36,17 @@ void Worker::readyRead()
     QByteArray buff = m_socket->readAll();
 
     QString stringified = bytesToString(buff);
+//    qDebug() << stringified.lastIndexOf('\n');
+//    stringified = stringified.trimmed();
 
+//    if (stringified.contains("Want You Bad"))
+//        stringified = QString("Want You Bad");
     qDebug() << "Got query" << stringified;
-    QString url = m_graph->findSongUrl(stringified);
+    QString search("Want You Bad");
+//    QString url = m_graph->findSongUrl(search);
+    QString url = m_graph->findSongUrl(QString("Want You Bad"));
+    qDebug() << "ovde sam";
+    qDebug() << "Ovo sam dobio kao rezultat mamu ti jebem" << url;
     if(url != nullptr) {
         m_cache->add(stringified, url);
     }

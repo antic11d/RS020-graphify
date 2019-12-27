@@ -250,8 +250,10 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
 
 QString KnowledgeGraph::findSongUrl(const QString &title)
 {
+    qDebug() << "kurac";
     auto song_e = m_sentries[0];
     for(auto song : song_e->getEdges()) {
+        qDebug() << song->getPointsTo()->getValue();
         if (song->getPointsTo()->getValue() == title) {
             return song->getPointsTo()->getMetadata()->getUrl();
         }
