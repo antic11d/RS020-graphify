@@ -17,8 +17,9 @@ struct comparator {
 class MinHeap
 {
 public:
-    MinHeap(QVector<CachedSong> &initial_songs);
-    void add(const QString &title);
+    MinHeap(const QVector<CachedSong> &initial_songs);
+    MinHeap(const QVector<CachedSong> &&initial_songs);
+    void add(const QString &title, const QString &url);
     QVector<QString> read();
     void print();
 private:

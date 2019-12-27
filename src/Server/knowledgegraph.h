@@ -23,8 +23,8 @@
 #include "performergenretraverse.h"
 #include "performertraverse.h"
 #include "songtraverse.h"
-#include "cachedsong.h"
-#include "minheap.h"
+//#include "cachedsong.h"
+//#include "minheap.h"
 
 class KnowledgeGraph : public QObject
 {
@@ -33,6 +33,7 @@ public:
     KnowledgeGraph(const QString category, QObject *parent);
     QVector<QString> traverse(const QStringList &query_params, const int &t_case) const;
     QVector<QString> traverseProcess(const QString &query);
+    QString findSongUrl(const QString &title);
 
 private:
     QVector<QPair<QString, QString>> m_category {

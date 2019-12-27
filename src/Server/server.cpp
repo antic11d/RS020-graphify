@@ -8,6 +8,13 @@ Server::Server(int port, QObject *parent)
     urls << tr("https://www.youtube.com/embed/skq59BfjkyM")
          << tr("https://www.youtube.com/embed/u-ndajHaih8")
          << tr("https://www.youtube.com/embed/vgmRgE1k8Ek&t=2222s");
+
+    cache = new MinHeap(QVector<CachedSong> {
+                            CachedSong (QString("Changes"), QString("xMQ0Ryy01yE"), 1),
+                            CachedSong (QString("Run It"), QString("w6QGe-pXgdI"), 1),
+                            CachedSong (QString("This Love"), QString("XPpTgCho5ZA"), 1),
+                            CachedSong (QString("Whenever, Wherever"), QString("weRHyjj34ZE"), 1)
+                            });
 }
 
 void Server::start()
@@ -24,7 +31,7 @@ void Server::incomingConnection(qintptr handle)
 {
     qDebug() << "Handle" << handle << "connecting...";
 
-    Worker *worker = new Worker(handle, m_graph, this);
+    Worker *worker = new Worker(handle, m_graph, cache, this);
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     worker->start();
 }

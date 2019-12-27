@@ -1,10 +1,11 @@
 #include "worker.h"
 
-Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, QObject *parent)
+Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, MinHeap *cache, QObject *parent)
     : QThread(parent)
     , m_socketDescriptor(socketDescriptor)
 {
     m_graph = graph;
+    m_cache = cache;
 }
 
 void Worker::run()
@@ -20,6 +21,7 @@ void Worker::run()
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection); // DirectConnection zbog tredova
 
     qDebug() << "Client connected on handle" << m_socketDescriptor;
+    sendData(m_cache->read());
 
     exec(); // loop
 }
@@ -36,6 +38,11 @@ void Worker::readyRead()
     QString stringified = bytesToString(buff);
 
     qDebug() << "Got query" << stringified;
+    QString url = m_graph->findSongUrl(stringified);
+    if(url != nullptr) {
+        m_cache->add(stringified, url);
+    }
+
 
     //TODO nek bude stringified
     //Query se s fronta pravi tako da dodje Performer::Song::Genre
