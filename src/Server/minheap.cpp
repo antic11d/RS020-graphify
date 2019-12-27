@@ -21,12 +21,11 @@ void MinHeap::add(const QString &title, const QString &url)
     m_mutex.lock();
     auto it = inCache.find(title);
     if (it == inCache.end()) {
-        qDebug() << "nisam naso brata";
         minHeap.pop();
         minHeap.push(CachedSong(title, url, 1));
+        inCache.insert(title, CachedSong(title, url, 1));
     }
     else {
-        qDebug() << "naso sam brata";
         auto toUpdatrSong = inCache.find(title);
         toUpdatrSong.value().increment();
         minHeap = std::priority_queue<CachedSong, QVector<CachedSong>, comparator> ();

@@ -36,17 +36,11 @@ void Worker::readyRead()
     QByteArray buff = m_socket->readAll();
 
     QString stringified = bytesToString(buff);
-//    qDebug() << stringified.lastIndexOf('\n');
-//    stringified = stringified.trimmed();
-
-//    if (stringified.contains("Want You Bad"))
-//        stringified = QString("Want You Bad");
+    stringified = stringified.remove(QChar('\n'));
+    //TODO kad stigne u formatu Performer::Song::Genre izvucemo pesmu ako ima
     qDebug() << "Got query" << stringified;
-    QString search("Want You Bad");
-//    QString url = m_graph->findSongUrl(search);
-    QString url = m_graph->findSongUrl(QString("Want You Bad"));
-    qDebug() << "ovde sam";
-    qDebug() << "Ovo sam dobio kao rezultat mamu ti jebem" << url;
+
+    QString url = m_graph->findSongUrl(stringified);
     if(url != nullptr) {
         m_cache->add(stringified, url);
     }
@@ -54,7 +48,6 @@ void Worker::readyRead()
 
     //TODO nek bude stringified
     //Query se s fronta pravi tako da dodje Performer::Song::Genre
-    //Ima pesma trap, nemoj se zbunis bato dobri
     QVector<QString> res = m_graph->traverseProcess("David Bowie::::");
     for (auto r : res) {
         qDebug() << "hopa " << r;
@@ -66,17 +59,7 @@ void Worker::readyRead()
 bool Worker::sendData(QVector<QString> data)
 {
     QDataStream stream(m_socket);
-//    stream << QString("Picko\n").toUtf8();
     stream << data;
-//    stream << QString("Picko\n").toUtf8();
-//    QString packedData = data.toList().join("-");
-//    if (m_socket->state() == QAbstractSocket::ConnectedState) {
-//        qDebug() << "Sending graph data";
-//        m_socket->write(packedData.toUtf8());
-
-//        return m_socket->waitForBytesWritten();
-//    } else
-//        return false;
     return true;
 }
 
