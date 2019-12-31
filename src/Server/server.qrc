@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>data/query.json</file>
+        <file>data/big_data.json</file>
+        <file>data/big_sample.json</file>
     </qresource>
 </RCC>

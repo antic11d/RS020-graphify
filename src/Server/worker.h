@@ -5,12 +5,14 @@
 #include <QThread>
 #include <QTcpSocket>
 #include "knowledgegraph.h"
+#include "minheap.h"
+#include "cachedsong.h"
 
 class Worker : public QThread
 {
     Q_OBJECT
 public:
-    Worker(int socketDescriptor, KnowledgeGraph *graph, QObject *parent = nullptr);
+    Worker(int socketDescriptor, KnowledgeGraph *graph, MinHeap *cache, QObject *parent = nullptr);
 
     void run() override;
 
@@ -26,6 +28,7 @@ private:
     QString m_url;
     QTcpSocket *m_socket;
     KnowledgeGraph *m_graph;
+    MinHeap *m_cache;
 
     bool sendData(QVector<QString> data);
 };

@@ -1,10 +1,11 @@
 #include "worker.h"
 
-Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, QObject *parent)
+Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, MinHeap *cache, QObject *parent)
     : QThread(parent)
     , m_socketDescriptor(socketDescriptor)
 {
     m_graph = graph;
+    m_cache = cache;
 }
 
 void Worker::run()
@@ -20,6 +21,7 @@ void Worker::run()
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection); // DirectConnection zbog tredova
 
     qDebug() << "Client connected on handle" << m_socketDescriptor;
+    sendData(m_cache->read());
 
     exec(); // loop
 }
@@ -34,13 +36,19 @@ void Worker::readyRead()
     QByteArray buff = m_socket->readAll();
 
     QString stringified = bytesToString(buff);
-
+    stringified = stringified.remove(QChar('\n'));
+    //TODO kad stigne u formatu Performer::Song::Genre izvucemo pesmu ako ima
     qDebug() << "Got query" << stringified;
+
+    QString url = m_graph->findSongUrl(stringified);
+    if(url != nullptr) {
+        m_cache->add(stringified, url);
+    }
+
 
     //TODO nek bude stringified
     //Query se s fronta pravi tako da dodje Performer::Song::Genre
-    //Ima pesma trap, nemoj se zbunis bato dobri
-    QVector<QString> res = m_graph->traverseProcess("Shakira::::");
+    QVector<QString> res = m_graph->traverseProcess("David Bowie::::");
     for (auto r : res) {
         qDebug() << "hopa " << r;
     }
@@ -51,17 +59,7 @@ void Worker::readyRead()
 bool Worker::sendData(QVector<QString> data)
 {
     QDataStream stream(m_socket);
-//    stream << QString("Picko\n").toUtf8();
     stream << data;
-//    stream << QString("Picko\n").toUtf8();
-//    QString packedData = data.toList().join("-");
-//    if (m_socket->state() == QAbstractSocket::ConnectedState) {
-//        qDebug() << "Sending graph data";
-//        m_socket->write(packedData.toUtf8());
-
-//        return m_socket->waitForBytesWritten();
-//    } else
-//        return false;
     return true;
 }
 
