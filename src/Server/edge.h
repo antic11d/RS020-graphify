@@ -10,14 +10,17 @@ class Edge : public QObject
 {
     Q_OBJECT
 public:
-    explicit Edge(QString type, QPointer<Entity> pointsTo, QObject *parent = nullptr);
+    explicit Edge(QString type, QPointer<Entity> pointsTo, QObject *parent = nullptr, int strength = 0);
     ~Edge();
     QString getType() const;
     QPointer<Entity> getPointsTo() const;
+    void reinforce();
+    int getStrength();
 
 private:
     QString m_type;
     QPointer<Entity> m_pointsTo;
+    int m_strength;
 };
 
 #endif // EDGE_H

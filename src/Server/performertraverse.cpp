@@ -1,9 +1,9 @@
 #include "performertraverse.h"
 
-QVector<QString> PerformerTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+QVector<QPointer<Entity>> PerformerTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
     QString performer = query[0];
     QVector<QPointer<Edge>> e_performers;
-    QVector<QString> res;
+    QVector<QPointer<Entity>> res;
     auto starting_entry = entires[0];
 
 
@@ -26,7 +26,7 @@ QVector<QString> PerformerTraverse::traverse(const QStringList &query, const QVe
 
 
     for (auto song : all_songs) {
-        res.push_back(song->getPointsTo()->getMetadata()->getUrl());
+        res.push_back(song->getPointsTo());
     }
 
     return res;
