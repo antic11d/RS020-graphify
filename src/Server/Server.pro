@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cachedsong.cpp \
+        collaborativefiltering.cpp \
         edge.cpp \
         entity.cpp \
         genre.cpp \
@@ -45,6 +46,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     cachedsong.h \
+    collaborativefiltering.h \
     edge.h \
     entity.h \
     genre.h \

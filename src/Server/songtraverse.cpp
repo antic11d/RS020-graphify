@@ -1,7 +1,6 @@
 #include "songtraverse.h"
 
 
-//TODO must return link instead of name
 QVector<QString> SongTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
     QString song = query[0];
 //    QVector<QPointer<Edge>> e_performers;

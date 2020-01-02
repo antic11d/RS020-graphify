@@ -24,6 +24,7 @@
 #include "performergenretraverse.h"
 #include "performertraverse.h"
 #include "songtraverse.h"
+#include "collaborativefiltering.h"
 #include "cachedsong.h"
 #include "minheap.h"
 #include "user.h"
@@ -35,6 +36,7 @@ public:
     KnowledgeGraph(const QString category, QObject *parent);
     QVector<QString> traverse(const QStringList &query_params, const int &t_case) const;
     QVector<QString> traverseProcess(const QString &query);
+    QVector<QString> collaborative(const QString &username, const QString &title);
 
 private:
     QVector<QPair<QString, QString>> m_category {

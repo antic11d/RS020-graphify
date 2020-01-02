@@ -190,14 +190,25 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
       qDebug() << "Idemo sad na usera";
       addUser("andrija", "andrija");
-      strengthenGraph("andrija", "Trap");
+      addUser("mica", "mica");
+      addUser("nidza", "nidza");
+
+      strengthenGraph("mica", "La Tortura");
+      strengthenGraph("mica", "Illegal");
+      strengthenGraph("nidza", "Rabiosa");
+      strengthenGraph("nidza", "Addicted to You");
+      strengthenGraph("mica", "Trap");
+      strengthenGraph("nidza", "Trap");
       strengthenGraph("andrija", "Trap");
 
+      auto res = traverse(QStringList(), 9);
+
+      qDebug() << "sta useri vole";
       auto user_e = m_uentries[0];
       for(auto edge : user_e->getEdges()) {
         auto user = edge->getPointsTo();
         for(auto u_edge : user->getEdges()) {
-            qDebug() << "Edges: " << u_edge->getType() << u_edge->getPointsTo()->getValue() << u_edge->getStrength();
+            qDebug() << user->getValue() << ": " << u_edge->getType() << u_edge->getPointsTo()->getValue() << u_edge->getStrength();
         }
       }
 
@@ -238,6 +249,7 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
     PerformerGenreTraverse pgT;
     PerformerTraverse pT;
     SongTraverse sT;
+    CollaborativeFIltering cT;
     TraverseBehavior *t = nullptr;
     switch (t_case) {
         case 2:
@@ -252,6 +264,10 @@ QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const
             t = &pgT;
             res = t->traverse(query_params, m_pentries);
             break;
+        case 9:
+            t = &cT;
+            qDebug() << "spreman da pokidam";
+            res = t->traverse(QStringList{"Trap", "andrija"}, m_sentries);
         default:
             break;
     }
@@ -263,6 +279,38 @@ void KnowledgeGraph::addUser(const QString &username, const QString &passwd) {
     m_entities.push_back(QPointer(new_user));
     m_uentries[0]->addEdge(QPointer(new Edge("CONTAINS", new_user, this)));
 //    m_users.insert(username, QPointer(new_user));
+}
+
+QVector<QString> KnowledgeGraph::collaborative(const QString &username, const QString &title)
+{
+    QPointer<Entity> user = nullptr;
+    auto user_e = m_uentries[0];
+    auto song_e = m_sentries[0];
+
+    for(auto tmp_song_edge : song_e->getEdges())
+    {
+        if(tmp_song_edge->getPointsTo()->getValue() == title)
+        {
+            auto searched_song = tmp_song_edge->getPointsTo();
+            for (auto liked : searched_song->getEdges())
+            {
+                if (liked->getType() == "LIKED_BY") {
+                    qDebug() << liked->getPointsTo()->getValue();
+                }
+            }
+        }
+    }
+
+
+//    for (auto tmp_user_edge : user_e->getEdges()) {
+//        if(tmp_user_edge->getPointsTo()->getValue() == username)
+//        {
+//            user = tmp_user_edge->getPointsTo();
+//        }
+//    }
+
+    return QVector<QString>();
+
 }
 
 void KnowledgeGraph::strengthenGraph(const QString &username, const QString &title)
