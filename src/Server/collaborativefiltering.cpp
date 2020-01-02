@@ -1,9 +1,9 @@
 #include "collaborativefiltering.h"
 
-QVector<QString> CollaborativeFIltering::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
     QString title = query[0];
     QString username = query[1];
-    QVector<QString> res;
+    QVector<QPointer<Entity>> res;
     QVector<QVector<QPointer<Entity>>> songs;
     auto starting_entry = entires[0];
 //    qDebug() << "my title" << title;
@@ -31,6 +31,7 @@ QVector<QString> CollaborativeFIltering::traverse(const QStringList &query, cons
         for (auto j : i)
         {
             qDebug() << "foudn song: " << j->getValue();
+            res.push_back(j);
         }
     }
 

@@ -34,8 +34,8 @@ class KnowledgeGraph : public QObject
     Q_OBJECT
 public:
     KnowledgeGraph(const QString category, QObject *parent);
-    QVector<QString> traverse(const QStringList &query_params, const int &t_case) const;
-    QVector<QString> traverseProcess(const QString &query);
+    QVector<QPointer<Entity>> traverse(const QStringList &query_params, const int &t_case) const;
+    QVector<QPointer<Entity>> traverseProcess(const QString &query);
     QVector<QString> collaborative(const QString &username, const QString &title);
 
 private:

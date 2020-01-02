@@ -219,9 +219,9 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
 }
 
-QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
+QVector<QPointer<Entity>> KnowledgeGraph::traverseProcess(const QString &query) {
     QPair<QStringList, int> prepared = prepareQuery(query);
-    QVector<QString> res = traverse(prepared.first, prepared.second);
+    QVector<QPointer<Entity>> res = traverse(prepared.first, prepared.second);
     return res;
 }
 
@@ -244,8 +244,8 @@ QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
 //    return result;
 //}
 
-QVector<QString> KnowledgeGraph::traverse(const QStringList &query_params, const int &t_case) const {
-    QVector<QString> res;
+QVector<QPointer<Entity>> KnowledgeGraph::traverse(const QStringList &query_params, const int &t_case) const {
+    QVector<QPointer<Entity>> res;
     PerformerGenreTraverse pgT;
     PerformerTraverse pT;
     SongTraverse sT;

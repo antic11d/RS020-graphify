@@ -40,12 +40,12 @@ void Worker::readyRead()
     //TODO nek bude stringified
     //Query se s fronta pravi tako da dodje Performer::Song::Genre
     //Ima pesma trap, nemoj se zbunis bato dobri
-    QVector<QString> res = m_graph->traverseProcess("Shakira::::");
+    QVector<QPointer<Entity>> res = m_graph->traverseProcess("Shakira::::");
     for (auto r : res) {
-        qDebug() << "hopa " << r;
+        qDebug() << "hopa " << r->getValue();
     }
 
-    sendData(res);
+//    sendData(res);
 }
 
 bool Worker::sendData(QVector<QString> data)
