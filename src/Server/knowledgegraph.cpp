@@ -86,7 +86,8 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         QString label = v.toObject().value(field+"Label").toString();
         Entity* parsed;
         if (field == "title") {
-            parsed = new T(parsedId, label, QPointer(new Metadata("url", "https://www.youtube.com/embed/u-ndajHaih8")), this);
+            QString ytLink = v.toObject().value("YouTube_video_ID").toString();
+            parsed = new T(parsedId, label, QPointer(new Metadata("url", ytLink)), this);
         } else {
             parsed = new T(parsedId, label, nullptr, this);
         }
@@ -186,6 +187,7 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 //    QVector<CachedSong> vec{c1, c2, c3, c4};
 //    MinHeap cache(vec);
 //    cache.add(QString("ff"));
+
 //    cache.print();
 
       qDebug() << "Idemo sad na usera";
@@ -211,6 +213,7 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
             qDebug() << user->getValue() << ": " << u_edge->getType() << u_edge->getPointsTo()->getValue() << u_edge->getStrength();
         }
       }
+
 
 //    QVector<QString> res = traverseProcess("::Trap::");
 //    for (auto r : res) {
@@ -344,5 +347,16 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
 
     user->addEdge(QPointer(new Edge("LIKES", searchedSong, this, 1)));
     searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
+
+QString KnowledgeGraph::findSongUrl(const QString &title)
+{
+    auto song_e = m_sentries[0];
+    for(auto song : song_e->getEdges()) {
+        if (song->getPointsTo()->getValue() == title) {
+            return song->getPointsTo()->getMetadata()->getUrl();
+        }
+    }
+    return nullptr;
+
 }
 

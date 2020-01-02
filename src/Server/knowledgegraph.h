@@ -34,13 +34,16 @@ class KnowledgeGraph : public QObject
     Q_OBJECT
 public:
     KnowledgeGraph(const QString category, QObject *parent);
+
     QVector<QPointer<Entity>> traverse(const QStringList &query_params, const int &t_case) const;
     QVector<QPointer<Entity>> traverseProcess(const QString &query);
     QVector<QString> collaborative(const QString &username, const QString &title);
+    QString findSongUrl(const QString &title);
 
 private:
     QVector<QPair<QString, QString>> m_category {
-        QPair(QString("music"), QString(":/data/query.json"))
+        QPair(QString("music"), QString(":/data/query.json")),
+        QPair(QString("big_data"), QString(":/data/big_sample.json"))
     };
     QVector<QPointer<Entity>> m_entities;
     QVector<QPointer<Entity>> m_pentries;
