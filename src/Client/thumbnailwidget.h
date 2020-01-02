@@ -5,14 +5,13 @@
 #include <QWebEngineView>
 #include <QPushButton>
 
-class ThumbnailWidget : public QWidget
+class ThumbnailWidget : public QWebEngineView
 {
     Q_OBJECT
 public:
     explicit ThumbnailWidget(QString url, QWidget *parent = nullptr);
 
 public:
-    QWebEngineView *m_webView;
     QString m_url;
 
     QString getThumbnail(QString url) const;

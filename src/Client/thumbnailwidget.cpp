@@ -1,13 +1,13 @@
 #include "thumbnailwidget.h"
 
 ThumbnailWidget::ThumbnailWidget(QString url, QWidget *parent)
-    : QWidget(parent)
+    : QWebEngineView(parent)
     , m_url(url)
 {
-    m_webView = new QWebEngineView(parent);
-    m_webView->resize(20, 80);
-    m_webView->setHtml(getThumbnail(url));
-    m_webView->setDisabled(true);
+//    m_webView = new QWebEngineView(parent);
+    this->resize(20, 80);
+    this->setHtml(getThumbnail(url));
+    this->setDisabled(true);
 }
 
 QString ThumbnailWidget::getThumbnail(QString url) const

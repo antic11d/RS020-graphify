@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     initializeRecommended();
 
+//    auto widget = ui->scrollAreaWidgetContents->focusWidget();
+//    qDebug() <<widget;
+
+
+
     m_transport = new Transport("localhost", 12345, true, this);
     // Should be done when CONNECT button is pressed
 //    if (m_transport->connectToHost()) {
@@ -54,7 +59,7 @@ void MainWindow::initializeRecommended()
     for (auto url : urls) {
         ThumbnailWidget *view = new ThumbnailWidget(url, ui->graphicsView);
 
-        layout->addWidget(view->m_webView);
+        layout->addWidget(view);
     }
 }
 
