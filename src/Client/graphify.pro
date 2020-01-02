@@ -27,10 +27,12 @@ CONFIG += c++17
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+        thumbnailwidget.cpp \
         transport.cpp
 
 HEADERS += \
         mainwindow.h \
+        thumbnailwidget.h \
         transport.h
 
 RESOURCES += \

@@ -16,9 +16,8 @@ public:
 signals:
     void closed();
 
-// Should be private when all slots connects to signals sent from ui
 public slots:
-      bool writeData(QString song, QString genre, QString performer) const;
+      bool writeData(QString query) const;
       void readData();
 //      void displayError(QAbstractSocket::SocketError socketError) const;
 //      void sessionOpened() const;
