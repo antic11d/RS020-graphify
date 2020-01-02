@@ -190,18 +190,18 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
 //    cache.print();
 
-      qDebug() << "Idemo sad na usera";
+
       addUser("andrija", "andrija");
       addUser("mica", "mica");
       addUser("nidza", "nidza");
-
-      strengthenGraph("mica", "La Tortura");
-      strengthenGraph("mica", "Illegal");
-      strengthenGraph("nidza", "Rabiosa");
-      strengthenGraph("nidza", "Addicted to You");
-      strengthenGraph("mica", "Trap");
-      strengthenGraph("nidza", "Trap");
-      strengthenGraph("andrija", "Trap");
+      strengthenGraph("mica", "Changes");
+      strengthenGraph("mica", "Changes");
+      strengthenGraph("mica", "Run It!");
+      strengthenGraph("nidza", "Whenever, Wherever");
+      strengthenGraph("nidza", "The Golden Path");
+      strengthenGraph("mica", "Turn Up the Radio");
+      strengthenGraph("nidza", "Turn Up the Radio");
+      strengthenGraph("andrija", "Turn Up the Radio");
 
       auto res = traverse(QStringList(), 9);
 
@@ -269,8 +269,7 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(const QStringList &query_para
             break;
         case 9:
             t = &cT;
-            qDebug() << "spreman da pokidam";
-            res = t->traverse(QStringList{"Trap", "andrija"}, m_sentries);
+            res = t->traverse(QStringList{"Turn Up the Radio", "andrija"}, m_sentries);
         default:
             break;
     }
@@ -344,9 +343,10 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
         }
     }
 
-
     user->addEdge(QPointer(new Edge("LIKES", searchedSong, this, 1)));
     searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
+}
+
 
 QString KnowledgeGraph::findSongUrl(const QString &title)
 {

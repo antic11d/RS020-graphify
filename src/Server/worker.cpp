@@ -51,6 +51,7 @@ void Worker::readyRead()
     //Ima pesma trap, nemoj se zbunis bato dobri
     QVector<QPointer<Entity>> res = m_graph->traverseProcess("Shakira::::");
 
+
 //    sendData(res);
 }
 
