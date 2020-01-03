@@ -1,13 +1,31 @@
 #include "thumbnailwidget.h"
 
 ThumbnailWidget::ThumbnailWidget(QString url, QWidget *parent)
-    : QWebEngineView(parent)
+    : QGroupBox(parent)
     , m_url(url)
 {
-//    m_webView = new QWebEngineView(parent);
-    this->resize(20, 80);
-    this->setHtml(getThumbnail(url));
-    this->setDisabled(true);
+    m_view = new QWebEngineView(parent);
+    m_view->resize(10, 150);
+    m_view->setHtml(getThumbnail(url));
+    m_view->setDisabled(true);
+
+    m_button = new QPushButton;
+    m_button->resize(10, 40);
+    m_button->setText("Play");
+
+    connect(m_button, SIGNAL (pressed()), this, SLOT (btnPlayPressed()));
+
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->addWidget(m_view, 1);
+    vbox->addWidget(m_button, 0, Qt::AlignHCenter);
+
+
+    this->setLayout(vbox);
+}
+
+void ThumbnailWidget::btnPlayPressed()
+{
+    emit clicked(m_url);
 }
 
 QString ThumbnailWidget::getThumbnail(QString url) const

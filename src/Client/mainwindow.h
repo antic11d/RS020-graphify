@@ -21,6 +21,7 @@ public:
 
 private slots:
     void btnSearchPressed();
+    void btnPlayPressed(QString url);
 
 private:
     Ui::MainWindow *ui;
@@ -28,7 +29,6 @@ private:
     Transport *m_transport;
     QWidget *scroll;
 
-    void initializeResources();
     void initializeRecommended();
     QString getThumbnail(QString url) const;
     QString getHtml(QString url) const;

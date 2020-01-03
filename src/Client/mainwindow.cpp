@@ -19,14 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_view->show();
 
     connect(ui->btnSearch, SIGNAL (pressed()), this, SLOT (btnSearchPressed()));
-//    connect(ui->scrollArea, SIGNAL ())
 
     initializeRecommended();
-
-//    auto widget = ui->scrollAreaWidgetContents->focusWidget();
-//    qDebug() <<widget;
-
-
 
     m_transport = new Transport("localhost", 12345, true, this);
     // Should be done when CONNECT button is pressed
@@ -57,10 +51,17 @@ void MainWindow::initializeRecommended()
 
     QVector<ThumbnailWidget*> widgets;
     for (auto url : urls) {
-        ThumbnailWidget *view = new ThumbnailWidget(url, ui->graphicsView);
+        ThumbnailWidget *view = new ThumbnailWidget(url, ui->scrollArea);
+
+        connect(view, SIGNAL (clicked(QString)), this, SLOT (btnPlayPressed(QString)));
 
         layout->addWidget(view);
     }
+}
+
+void MainWindow::btnPlayPressed(QString url)
+{
+    m_view->setHtml(getHtml(url));
 }
 
 void MainWindow::btnSearchPressed()
@@ -111,12 +112,9 @@ QString MainWindow::getHtml(QString url) const
     return html;
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::initializeResources()
-{
-
-}

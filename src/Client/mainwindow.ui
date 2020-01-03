@@ -25,14 +25,14 @@
      <rect>
       <x>21</x>
       <y>71</y>
-      <width>720</width>
-      <height>500</height>
+      <width>600</width>
+      <height>400</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>720</width>
-      <height>500</height>
+      <width>500</width>
+      <height>300</height>
      </size>
     </property>
    </widget>
@@ -126,11 +126,14 @@
    <widget class="QScrollArea" name="scrollArea">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>660</x>
       <y>70</y>
-      <width>211</width>
+      <width>311</width>
       <height>491</height>
      </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
     </property>
     <property name="widgetResizable">
      <bool>true</bool>
@@ -140,7 +143,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>209</width>
+       <width>309</width>
        <height>489</height>
       </rect>
      </property>
