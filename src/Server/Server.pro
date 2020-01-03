@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cachedsong.cpp \
+        collaborativefiltering.cpp \
         edge.cpp \
         entity.cpp \
         genre.cpp \
@@ -34,6 +35,8 @@ SOURCES += \
         song.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
+        uentrypoint.cpp \
+        user.cpp \
         worker.cpp
 
 # Default rules for deployment.
@@ -43,6 +46,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     cachedsong.h \
+    collaborativefiltering.h \
     edge.h \
     entity.h \
     genre.h \
@@ -59,6 +63,8 @@ HEADERS += \
     song.h \
     songtraverse.h \
     traversebehavior.h \
+    uentrypoint.h \
+    user.h \
     worker.h
 
 RESOURCES += \
