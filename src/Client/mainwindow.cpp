@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    loggedIn = false;
+
     m_view = new QWebEngineView(ui->graphicsView);
     m_view->setHtml(getHtml("TVuipQx5zYY"));
     m_view->resize (ui->graphicsView->width (), ui->graphicsView->height ());
@@ -51,7 +53,7 @@ void MainWindow::initializeRecommended()
 
     QVector<ThumbnailWidget*> widgets;
     for (auto url : urls) {
-        ThumbnailWidget *view = new ThumbnailWidget(url, ui->scrollArea);
+        ThumbnailWidget *view = new ThumbnailWidget(url, "song", "performer", "genre", ui->scrollArea);
 
         connect(view, SIGNAL (clicked(QString)), this, SLOT (btnPlayPressed(QString)));
 
@@ -66,6 +68,19 @@ void MainWindow::btnPlayPressed(QString url)
 
 void MainWindow::btnSearchPressed()
 {
+    if (!loggedIn) {
+        LoginDialog *login = new LoginDialog(this);
+        connect(login, SIGNAL (acceptLogin(QString)), this, SLOT (notifyServer(QString)));
+
+        login->exec();
+
+        loggedIn = true;
+    }
+    queryServer();
+}
+
+void MainWindow::queryServer() const
+{
     QString genre = ui->txtGenre->text();
     QString performer = ui->txtPerformer->text();
     QString song = ui->txtSong->text();
@@ -74,13 +89,19 @@ void MainWindow::btnSearchPressed()
 
     qDebug() << "About to send query:" << query;
 
-
     if (m_transport->writeData(query)) {
         qDebug() << "Write succeeded";
         m_transport->readData();
     } else {
         qDebug() << "Write failed";
     }
+}
+
+void MainWindow::notifyServer(QString username)
+{
+    //TODO should notify server about the username
+
+    qDebug() << "should notify server about the username";
 }
 
 QString MainWindow::getHtml(QString url) const

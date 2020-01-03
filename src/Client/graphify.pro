@@ -25,12 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
+        logindialog.cpp \
         main.cpp \
         mainwindow.cpp \
         thumbnailwidget.cpp \
         transport.cpp
 
 HEADERS += \
+        logindialog.h \
         mainwindow.h \
         thumbnailwidget.h \
         transport.h

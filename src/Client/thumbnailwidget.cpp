@@ -1,6 +1,6 @@
 #include "thumbnailwidget.h"
 
-ThumbnailWidget::ThumbnailWidget(QString url, QWidget *parent)
+ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString performer, QString genre, QWidget *parent)
     : QGroupBox(parent)
     , m_url(url)
 {
@@ -16,7 +16,7 @@ ThumbnailWidget::ThumbnailWidget(QString url, QWidget *parent)
     connect(m_button, SIGNAL (pressed()), this, SLOT (btnPlayPressed()));
 
     m_info = new QLabel(parent);
-    m_info->setText("IME TITLE GENRE");
+    m_info->setText(performer+" - "+songTitle+", "+genre);
 
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addWidget(m_view, 1);

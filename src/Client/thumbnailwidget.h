@@ -13,7 +13,7 @@ class ThumbnailWidget : public QGroupBox
 {
     Q_OBJECT
 public:
-    explicit ThumbnailWidget(QString url, QWidget *parent = nullptr);
+    explicit ThumbnailWidget(QString url, QString songTitle, QString performer, QString genre, QWidget *parent = nullptr);
 
 signals:
     void clicked(QString url);
