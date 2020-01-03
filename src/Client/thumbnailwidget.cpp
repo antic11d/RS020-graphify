@@ -4,6 +4,9 @@ ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString perform
     : QGroupBox(parent)
     , m_url(url)
 {
+//    QSizePolicy policy(QSizePolicy::Expanding);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     m_view = new QWebEngineView(parent);
     m_view->resize(10, 150);
     m_view->setHtml(getThumbnail(url));

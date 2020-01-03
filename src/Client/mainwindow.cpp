@@ -6,6 +6,7 @@
 #include <QListWidget>
 #include <QBrush>
 #include <QPixmap>
+#include <QSizePolicy>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -40,7 +41,7 @@ void MainWindow::initializeRecommended()
 {
     scroll = new QWidget;
     scroll->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    scroll->setLayout(new QVBoxLayout(scroll));
+    scroll->setLayout(new QVBoxLayout(ui->scrollArea));
 
     ui->scrollArea->setWidget(scroll);
 
@@ -58,6 +59,8 @@ void MainWindow::initializeRecommended()
         ThumbnailWidget *view = new ThumbnailWidget(url, "song", "performer", "genre", ui->scrollArea);
 
         connect(view, SIGNAL (clicked(QString)), this, SLOT (btnPlayPressed(QString)));
+
+        view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
         layout->addWidget(view);
     }
