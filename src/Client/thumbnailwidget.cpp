@@ -27,6 +27,8 @@ ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString perform
     vbox->addWidget(m_button, 0, Qt::AlignHCenter);
 
 
+    this->setMinimumSize(100, 100);
+    this->setMaximumSize(300, 300);
     this->setLayout(vbox);
 }
 
