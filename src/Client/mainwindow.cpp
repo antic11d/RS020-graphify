@@ -85,7 +85,7 @@ void MainWindow::queryServer() const
     QString performer = ui->txtPerformer->text();
     QString song = ui->txtSong->text();
 
-    QString query = song + "::" + performer + "::" + genre;
+    QString query = song + "::" + performer + "::" + genre + "::" + m_username;
 
     qDebug() << "About to send query:" << query;
 
@@ -100,6 +100,7 @@ void MainWindow::queryServer() const
 void MainWindow::notifyServer(QString username)
 {
     //TODO should notify server about the username
+    m_username = username;
 
     qDebug() << "should notify server about the username";
 }

@@ -31,6 +31,7 @@ private:
     Transport *m_transport;
     QWidget *scroll;
     bool loggedIn;
+    QString m_username;
 
     void initializeRecommended();
     QString getThumbnail(QString url) const;
