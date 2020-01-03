@@ -9,14 +9,18 @@ ThumbnailWidget::ThumbnailWidget(QString url, QWidget *parent)
     m_view->setHtml(getThumbnail(url));
     m_view->setDisabled(true);
 
-    m_button = new QPushButton;
+    m_button = new QPushButton(parent);
     m_button->resize(10, 40);
     m_button->setText("Play");
 
     connect(m_button, SIGNAL (pressed()), this, SLOT (btnPlayPressed()));
 
+    m_info = new QLabel(parent);
+    m_info->setText("IME TITLE GENRE");
+
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addWidget(m_view, 1);
+    vbox->addWidget(m_info, 0, Qt::AlignHCenter);
     vbox->addWidget(m_button, 0, Qt::AlignHCenter);
 
 

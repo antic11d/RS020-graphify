@@ -25,6 +25,7 @@ public:
     QString m_url;
     QWebEngineView *m_view;
     QPushButton *m_button;
+    QLabel *m_info;
 
     QString getThumbnail(QString url) const;
 
