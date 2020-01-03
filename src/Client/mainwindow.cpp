@@ -16,13 +16,15 @@ MainWindow::MainWindow(QWidget *parent)
     loggedIn = false;
 
     m_view = new QWebEngineView(ui->graphicsView);
-    m_view->setHtml(getHtml("TVuipQx5zYY"));
     m_view->resize (ui->graphicsView->width (), ui->graphicsView->height ());
+    m_view->setHtml(getHtml("TVuipQx5zYY"));
     m_view->show();
 
     connect(ui->btnSearch, SIGNAL (pressed()), this, SLOT (btnSearchPressed()));
 
     initializeRecommended();
+
+    ui->gridLayout->addLayout(ui->horizontalLayout_4, 0, 0);
 
     m_transport = new Transport("localhost", 12345, true, this);
     // Should be done when CONNECT button is pressed
