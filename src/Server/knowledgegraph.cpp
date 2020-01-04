@@ -26,10 +26,15 @@ QPair<QStringList, int> prepareQuery(const QString &query) {
     return QPair<QStringList, int>(query_params, t_case);
 }
 
-QVector<QString> packForSending(QVector<QPointer<Entity>> &response, const QString &performer, const QString &genre)
+QVector<QString> KnowledgeGraph::packForSending(QVector<QPointer<Entity>> &response, QString performer, QString genre)
 {
    QVector<QString> res;
    for (auto song : response) {
+        auto data = findSong(song->getValue());
+        if (performer == "")
+            performer = data[2];
+        if (genre == "")
+            genre = data[3];
         QString songData = "";
         songData += song->getMetadata()->getUrl() + "::";
         songData += song->getValue() + "::";
@@ -42,18 +47,19 @@ QVector<QString> packForSending(QVector<QPointer<Entity>> &response, const QStri
 
 }
 
-QVector<QString> prepForSending(QVector<QPointer<Entity>> &res, QStringList query_params, const int &t_case)
+QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, QStringList query_params, const int &t_case)
 {
     QVector<QString> result;
     switch (t_case) {
         case 2:
-            result = packForSending(res, "Mica Picka", "Pop Picka");
+            result = packForSending(res, "", "");
             break;
         case 4:
-            result = packForSending(res, query_params[0], "Pop");
+            result = packForSending(res, query_params[0], "");
             break;
-//        case 5:
-//            break;
+        case 5:
+            result = packForSending(res, query_params[0], query_params[1]);
+            break;
 //        case 9:
 //        default:
 //            break;

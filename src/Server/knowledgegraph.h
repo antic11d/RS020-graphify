@@ -66,6 +66,8 @@ private:
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
 //    QVector<QString> packData(QVector<Song*> data) const;
     void strengthenGraph(const QString &username, const QString &title);
+    QVector<QString> prepForSending(QVector<QPointer<Entity>> &res, QStringList query_params, const int &t_case);
+    QVector<QString> packForSending(QVector<QPointer<Entity>> &response, QString performer, QString genre);
 
 };
 
