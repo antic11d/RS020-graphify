@@ -62,6 +62,13 @@ void MainWindow::btnPlayPressed(QString &url)
     m_view->setHtml(getHtml(url));
 }
 
+void MainWindow::clearInput()
+{
+    ui->txtSong->clear();
+    ui->txtGenre->clear();
+    ui->txtPerformer->clear();
+}
+
 void MainWindow::btnSearchPressed()
 {
     if (!loggedIn) {
@@ -73,6 +80,7 @@ void MainWindow::btnSearchPressed()
         loggedIn = true;
     }
     queryServer();
+    clearInput();
 }
 
 void MainWindow::queryServer() const

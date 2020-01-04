@@ -38,6 +38,7 @@ private:
     QString getThumbnail(QString url) const;
     QString getHtml(QString url) const;
     void queryServer() const;
+    void clearInput();
 
 };
 
