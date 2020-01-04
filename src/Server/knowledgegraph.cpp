@@ -15,6 +15,7 @@ int prepareArray(QStringList &query_params) {
             res.push_back("1");
         }
     }
+    res.remove(3, 1);
     bool ok;
     return res.toInt(&ok, 2);
 }
@@ -22,10 +23,48 @@ int prepareArray(QStringList &query_params) {
 QPair<QStringList, int> prepareQuery(const QString &query) {
     QStringList query_params = query.split("::");
     int t_case = prepareArray(query_params);
-    for (auto i : query_params) {
-        qDebug() << i;
-    }
     return QPair<QStringList, int>(query_params, t_case);
+}
+
+QVector<QString> KnowledgeGraph::packForSending(QVector<QPointer<Entity>> &response, QString performer, QString genre)
+{
+   QVector<QString> res;
+   for (auto song : response) {
+        auto data = findSong(song->getValue());
+        if (performer == "")
+            performer = data[2];
+        if (genre == "")
+            genre = data[3];
+        QString songData = "";
+        songData += song->getMetadata()->getUrl() + "::";
+        songData += song->getValue() + "::";
+        songData += performer + "::";
+        songData += genre;
+        res.push_back(songData);
+   }
+
+   return res;
+
+}
+
+QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, QStringList query_params, const int &t_case)
+{
+    QVector<QString> result;
+    switch (t_case) {
+        case 2:
+            result = packForSending(res, "", "");
+            break;
+        case 4:
+            result = packForSending(res, query_params[0], "");
+            break;
+        case 5:
+            result = packForSending(res, query_params[0], query_params[1]);
+            break;
+//        case 9:
+//        default:
+//            break;
+    }
+    return result;
 }
 
 
@@ -72,6 +111,7 @@ void KnowledgeGraph::connectToEntry(const QPointer<Entity> e, QString flag, QMap
     connectedEntities->insert(e->getKey(), e);
 }
 
+
 template <typename T>
 QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPointer<Entity>>* entityMap, const QString &field)
 {
@@ -83,7 +123,8 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         return nullptr;
 
     if (!entityMap->contains(parsedId)) {
-        QString label = v.toObject().value(field+"Label").toString();
+        QString label = v.toObject().value(field+"Label").toString().toLower();
+
         Entity* parsed;
         if (field == "title") {
             QString ytLink = v.toObject().value("YouTube_video_ID").toString();
@@ -101,8 +142,6 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
     }
     return nullptr;
 }
-
-
 
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
@@ -126,8 +165,6 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
         connectToEntry(performer, "p", &connectedEntities);
         connectToEntry(genre, "g", &connectedEntities);
 
-
-//        Connect the dots
         performer->addEdge(QPointer(new Edge("SINGS", song, this)));
         song->addEdge(QPointer(new Edge("SINGED_BY", performer, this)));
         if (genre != nullptr) {
@@ -135,37 +172,6 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
             genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
         }
     }
-/*
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "PERFORMER") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }
-
-    qDebug() << "====================================";
-
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "SONG") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }
-
-    qDebug() << "====================================";
-
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "GENRE") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }*/
 }
 
 KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
@@ -179,75 +185,34 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
-//    qDebug() << "Malo igranje sa hesom sad";
-//    CachedSong c1(QString("aa"), QString("aa"), 1);
-//    CachedSong c2(QString("bb"), QString("bb"), 1);
-//    CachedSong c3(QString("cc"), QString("cc"), 3);
-//    CachedSong c4(QString("dd"), QString("dd"), 4);
-//    QVector<CachedSong> vec{c1, c2, c3, c4};
-//    MinHeap cache(vec);
-//    cache.add(QString("ff"));
-
-//    cache.print();
-
-
-      addUser("andrija", "andrija");
-      addUser("mica", "mica");
-      addUser("nidza", "nidza");
-      strengthenGraph("mica", "Changes");
-      strengthenGraph("mica", "Changes");
-      strengthenGraph("mica", "Run It!");
-      strengthenGraph("nidza", "Whenever, Wherever");
-      strengthenGraph("nidza", "The Golden Path");
-      strengthenGraph("mica", "Turn Up the Radio");
-      strengthenGraph("nidza", "Turn Up the Radio");
-      strengthenGraph("andrija", "Turn Up the Radio");
-
-      auto res = traverse(QStringList(), 9);
-
-      qDebug() << "sta useri vole";
-      auto user_e = m_uentries[0];
-      for(auto edge : user_e->getEdges()) {
-        auto user = edge->getPointsTo();
-        for(auto u_edge : user->getEdges()) {
-            qDebug() << user->getValue() << ": " << u_edge->getType() << u_edge->getPointsTo()->getValue() << u_edge->getStrength();
-        }
-      }
-
-
-//    QVector<QString> res = traverseProcess("::Trap::");
-//    for (auto r : res) {
-//        qDebug() << "hopa " << r;
-//    }
+    addUser("andrija", "andrija");
+    addUser("mica", "mica");
+    addUser("nidza", "nidza");
+    strengthenGraph("mica", "changes");
+    strengthenGraph("mica", "changes");
+    strengthenGraph("mica", "run it!");
+    strengthenGraph("nidza", "whenever, wherever");
+    strengthenGraph("nidza", "changes");
+    strengthenGraph("nidza", "changes");
+    strengthenGraph("mica", "turn up the radio");
+    strengthenGraph("nidza", "turn up the radio");
+    strengthenGraph("andrija", "changes");
 
 }
 
-QVector<QPointer<Entity>> KnowledgeGraph::traverseProcess(const QString &query) {
+QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
     QPair<QStringList, int> prepared = prepareQuery(query);
+    QString username = prepared.first.last();
+    existing_users.insert(username);
+    prepared.first.pop_back();
     QVector<QPointer<Entity>> res = traverse(prepared.first, prepared.second);
-    return res;
+    auto result = prepForSending(res, prepared.first, prepared.second);
+    return result;
 }
 
-//QVector<QString> KnowledgeGraph::packData(QVector<Song*> data) const
-//{
-//    qDebug() << "Packing data...";
-//    QVector<QString> result;
-//    foreach(auto &s, data) {
-//        result.push_back(QString(
-//                          s->getValue()+","
-//                         +s->getMetadataValue()+","
-//                         +s->getRelatedEntity("TYPE_OF")+","
-//                         +s->getRelatedEntity("PERFORMED_BY")
-//                                 ));
-//    }
-
-//    qDebug() << "Packed:" << result;
 
 
-//    return result;
-//}
-
-QVector<QPointer<Entity>> KnowledgeGraph::traverse(const QStringList &query_params, const int &t_case) const {
+QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, const int &t_case) {
     QVector<QPointer<Entity>> res;
     PerformerGenreTraverse pgT;
     PerformerTraverse pT;
@@ -269,51 +234,21 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(const QStringList &query_para
             break;
         case 9:
             t = &cT;
-            res = t->traverse(QStringList{"Turn Up the Radio", "andrija"}, m_sentries);
+            res = t->traverse(query_params, m_sentries);
         default:
             break;
     }
     return res;
 }
 
+
+
 void KnowledgeGraph::addUser(const QString &username, const QString &passwd) {
-    Entity *new_user = new User(username, passwd, nullptr, this);
+    Entity *new_user = new User(username, passwd, nullptr);
     m_entities.push_back(QPointer(new_user));
-    m_uentries[0]->addEdge(QPointer(new Edge("CONTAINS", new_user, this)));
-//    m_users.insert(username, QPointer(new_user));
+    m_uentries[0]->addEdge(QPointer(new Edge("CONTAINS", new_user)));
 }
 
-QVector<QString> KnowledgeGraph::collaborative(const QString &username, const QString &title)
-{
-    QPointer<Entity> user = nullptr;
-    auto user_e = m_uentries[0];
-    auto song_e = m_sentries[0];
-
-    for(auto tmp_song_edge : song_e->getEdges())
-    {
-        if(tmp_song_edge->getPointsTo()->getValue() == title)
-        {
-            auto searched_song = tmp_song_edge->getPointsTo();
-            for (auto liked : searched_song->getEdges())
-            {
-                if (liked->getType() == "LIKED_BY") {
-                    qDebug() << liked->getPointsTo()->getValue();
-                }
-            }
-        }
-    }
-
-
-//    for (auto tmp_user_edge : user_e->getEdges()) {
-//        if(tmp_user_edge->getPointsTo()->getValue() == username)
-//        {
-//            user = tmp_user_edge->getPointsTo();
-//        }
-//    }
-
-    return QVector<QString>();
-
-}
 
 void KnowledgeGraph::strengthenGraph(const QString &username, const QString &title)
 {
@@ -321,10 +256,10 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
     QPointer<Entity> user = nullptr;
     auto song_e = m_sentries[0];
     auto user_e = m_uentries[0];
-
     for (auto tmpUser : user_e->getEdges()) {
         if (tmpUser->getPointsTo()->getValue() == username) {
             user = tmpUser->getPointsTo();
+
             for (auto user_edge : user->getEdges()) {
                 if (user_edge->getType() == "LIKES") {
                     auto likedSong = user_edge->getPointsTo();
@@ -332,7 +267,6 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
                         user_edge->reinforce();
                         return;
                     }
-
                 }
             }
         }
@@ -342,9 +276,34 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
             searchedSong = song->getPointsTo();
         }
     }
-
     user->addEdge(QPointer(new Edge("LIKES", searchedSong, this, 1)));
     searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
+
+}
+
+QVector<QString> KnowledgeGraph::findSong(const QString &title)
+{
+    QString performer = "";
+    QString genre = "";
+    QString url = "";
+    auto song_e = m_sentries[0];
+    for(auto song : song_e->getEdges()) {
+        if (song->getPointsTo()->getValue() == title) {
+            url = song->getPointsTo()->getMetadata()->getUrl();
+            for (auto edge : song->getPointsTo()->getEdges()) {
+                if (edge->getType() == "SINGED_BY" && performer == "") {
+                    performer = edge->getPointsTo()->getValue();
+                }
+                if (edge->getType() == "TYPE_OF" && genre == "") {
+                    genre = edge->getPointsTo()->getValue();
+                }
+                if (performer != "" && genre != "")
+                    break;
+            }
+        }
+    }
+
+    return QVector<QString>{url, title, performer, genre};
 }
 
 
@@ -358,5 +317,16 @@ QString KnowledgeGraph::findSongUrl(const QString &title)
     }
     return nullptr;
 
+}
+
+void KnowledgeGraph::newUser(QString username, QString title)
+{
+    if (!existing_users.contains(username))
+    {
+        addUser(username, username);
+        existing_users.insert(username);
+    }
+
+    strengthenGraph(username, title);
 }
 

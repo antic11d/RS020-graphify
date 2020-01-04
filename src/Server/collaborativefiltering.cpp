@@ -6,11 +6,8 @@ QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &qu
     QVector<QPointer<Entity>> res;
     QVector<QVector<QPointer<Entity>>> songs;
     auto starting_entry = entires[0];
-//    qDebug() << "my title" << title;
-//    qDebug() << "-----------------------------";
     for(auto tmp_song_edge : starting_entry->getEdges())
     {
-//        qDebug() << "found song: " << tmp_song_edge->getPointsTo()->getValue();
         if(tmp_song_edge->getPointsTo()->getValue() == title)
         {
             qDebug() << tmp_song_edge->getPointsTo()->getValue();
@@ -22,7 +19,6 @@ QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &qu
                     songs.push_back(find_all_liked_songs(user));
                 }
             }
-
         }
     }
 
@@ -30,7 +26,6 @@ QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &qu
     {
         for (auto j : i)
         {
-            qDebug() << "foudn song: " << j->getValue();
             res.push_back(j);
         }
     }
