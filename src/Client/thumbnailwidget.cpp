@@ -4,9 +4,6 @@ ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString perform
     : QGroupBox(parent)
     , m_url(url)
 {
-//    QSizePolicy policy(QSizePolicy::Expanding);
-    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
     m_view = new QWebEngineView(parent);
     m_view->resize(10, 150);
     m_view->setHtml(getThumbnail(url));
@@ -27,8 +24,8 @@ ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString perform
     vbox->addWidget(m_button, 0, Qt::AlignHCenter);
 
 
-    this->setMinimumSize(100, 100);
-    this->setMaximumSize(300, 300);
+    this->setMinimumSize(200, 100);
+    this->setMaximumSize(250, 300);
     this->setLayout(vbox);
 }
 

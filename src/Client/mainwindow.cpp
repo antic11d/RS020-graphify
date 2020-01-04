@@ -56,7 +56,7 @@ void MainWindow::initializeRecommended()
         connect(view, SIGNAL (clicked(QString)), this, SLOT (btnPlayPressed(QString)));
 
         view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        layout->setAlignment(Qt::AlignHCenter);
+        layout->setAlignment(Qt::AlignRight);
         layout->addWidget(view);
     }
 }
