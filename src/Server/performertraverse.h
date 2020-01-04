@@ -7,7 +7,7 @@
 class PerformerTraverse : public TraverseBehavior
 {
 public:
-    virtual QVector<QString> traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const override;
+    virtual QVector<QPointer<Entity>> traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const override;
 };
 
 #endif // PERFORMERTRAVERSE_H

@@ -1,10 +1,11 @@
 #include "worker.h"
 
-Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, QObject *parent)
+Worker::Worker(int socketDescriptor, KnowledgeGraph *graph, MinHeap *cache, QObject *parent)
     : QThread(parent)
     , m_socketDescriptor(socketDescriptor)
 {
     m_graph = graph;
+    m_cache = cache;
 }
 
 void Worker::run()
@@ -16,12 +17,20 @@ void Worker::run()
         return;
     }
 
-    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection); // DirectConnection zbog tredova
-    connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection); // DirectConnection zbog tredova
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
+    connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
     qDebug() << "Client connected on handle" << m_socketDescriptor;
+    auto song_titles = m_cache->read();
+    QVector<QString> response;
+    for (auto song_title : song_titles) {
+        auto data = m_graph->findSong(song_title);
+        QString s = data[0] + "::" + data[1] + "::" + data[2] + "::" + data[3];
+        response.push_back(s);
+    }
 
-    exec(); // loop
+    sendData(response);
+    exec();
 }
 
 static QString bytesToString(QByteArray bytes)
@@ -34,16 +43,30 @@ void Worker::readyRead()
     QByteArray buff = m_socket->readAll();
 
     QString stringified = bytesToString(buff);
-
+    stringified = stringified.remove(QChar('\n'));
+    //Stize Performer::Song::Genre
+    //TODO kad stigne u formatu Performer::Song::Genre izvucemo pesmu ako ima
     qDebug() << "Got query" << stringified;
+    QStringList query_params = stringified.split("::");
+    QVector<QString> col_res;
 
-    //TODO nek bude stringified
-    //Query se s fronta pravi tako da dodje Performer::Song::Genre
-    //Ima pesma trap, nemoj se zbunis bato dobri
-    QVector<QString> res = m_graph->traverseProcess("Shakira::::");
-    for (auto r : res) {
-        qDebug() << "hopa " << r;
+    if(query_params[1] != "") {
+        QString url = m_graph->findSongUrl(query_params[1]);
+        if(url != nullptr) {
+            m_cache->add(query_params[1], url);
+        }
+        QStringList query{query_params[1], query_params[3]};
+        emit addUser(query_params[3], query_params[1]);
+        QVector<QPointer<Entity>> col = m_graph->traverse(query, 9);
+        for(auto song : col) {
+            auto data = m_graph->findSong(song->getValue());
+            QString s = data[0] + "::" + data[1] + "::" + data[2] + "::" + data[3];
+            col_res.push_back(s);
+        }
     }
+
+    auto res = m_graph->traverseProcess(stringified);
+    res += col_res;
 
     sendData(res);
 }
@@ -51,17 +74,7 @@ void Worker::readyRead()
 bool Worker::sendData(QVector<QString> data)
 {
     QDataStream stream(m_socket);
-//    stream << QString("Picko\n").toUtf8();
     stream << data;
-//    stream << QString("Picko\n").toUtf8();
-//    QString packedData = data.toList().join("-");
-//    if (m_socket->state() == QAbstractSocket::ConnectedState) {
-//        qDebug() << "Sending graph data";
-//        m_socket->write(packedData.toUtf8());
-
-//        return m_socket->waitForBytesWritten();
-//    } else
-//        return false;
     return true;
 }
 

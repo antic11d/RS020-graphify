@@ -1,4 +1,4 @@
-QT -= gui
+QT += gui
 QT += network
 
 CONFIG += c++17 console
@@ -16,6 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        cachedsong.cpp \
+        collaborativefiltering.cpp \
         edge.cpp \
         entity.cpp \
         genre.cpp \
@@ -23,6 +25,7 @@ SOURCES += \
         knowledgegraph.cpp \
         main.cpp \
         metadata.cpp \
+        minheap.cpp \
         pentrypoint.cpp \
         performer.cpp \
         performergenretraverse.cpp \
@@ -32,6 +35,8 @@ SOURCES += \
         song.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
+        uentrypoint.cpp \
+        user.cpp \
         worker.cpp
 
 # Default rules for deployment.
@@ -40,12 +45,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    cachedsong.h \
+    collaborativefiltering.h \
     edge.h \
     entity.h \
     genre.h \
     gentrypoint.h \
     knowledgegraph.h \
     metadata.h \
+    minheap.h \
     pentrypoint.h \
     performer.h \
     performergenretraverse.h \
@@ -55,6 +63,8 @@ HEADERS += \
     song.h \
     songtraverse.h \
     traversebehavior.h \
+    uentrypoint.h \
+    user.h \
     worker.h
 
 RESOURCES += \

@@ -1,10 +1,10 @@
 #include "performergenretraverse.h"
 
-QVector<QString> PerformerGenreTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+QVector<QPointer<Entity>> PerformerGenreTraverse::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
     QString performer = query[0];
     QString genre = query[1];
 
-    QVector<QString> res;
+    QVector<QPointer<Entity>> res;
     QVector<QPointer<Edge>> e_performers;
     QVector<QPointer<Edge>> e_songs;
     QVector<QPointer<Entity>> _performers;
@@ -31,10 +31,11 @@ QVector<QString> PerformerGenreTraverse::traverse(const QStringList &query, cons
     for (auto song : all_songs) {
         for(auto song_edge : song->getPointsTo()->getEdges()) {
             if (song_edge->getType() == "TYPE_OF" && song_edge->getPointsTo()->getValue() == genre) {
-                res.push_back(song->getPointsTo()->getMetadata()->getUrl());
+                res.push_back(song->getPointsTo());
             }
         }
     }
+
 
     return res;
 }
