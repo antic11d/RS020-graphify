@@ -10,50 +10,46 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    m_transport = new Transport("192.168.1.108", 12345, true, this);
+
+    if (m_transport->connectToHost()) {
+        qDebug() << "Connected to server";
+    } else {
+        qDebug() << "Failed to connect";
+    }
+
     loggedIn = false;
+
+    connect(ui->btnSearch, SIGNAL (pressed()), this, SLOT (btnSearchPressed()));
+    connect(m_transport, SIGNAL (dataReady(QVector<QString>&)), this, SLOT (initializeRecommended(QVector<QString>&)));
+}
+
+void MainWindow::initializeRecommended(QVector<QString> &urls)
+{
+
 
     m_view = new QWebEngineView(ui->graphicsView);
 //    m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_view->resize(ui->graphicsView->width(), ui->graphicsView->height());
-    m_view->setHtml(getHtml("TVuipQx5zYY"));
+    if (urls.length() > 0)
+        m_view->setHtml(getHtml(urls[0].split("::")[0]));
     m_view->show();
 
-    connect(ui->btnSearch, SIGNAL (pressed()), this, SLOT (btnSearchPressed()));
-
-    initializeRecommended();
-
-    m_transport = new Transport("localhost", 12345, true, this);
-    // Should be done when CONNECT button is pressed
-//    if (m_transport->connectToHost()) {
-//        qDebug() << "Connected to server";
-//    } else {
-//        qDebug() << "Failed to connect";
-//    }
-
-}
-
-void MainWindow::initializeRecommended()
-{
     scroll = new QWidget;
     scroll->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     scroll->setLayout(new QVBoxLayout(ui->scrollArea));
 
     ui->scrollArea->setWidget(scroll);
 
-    QVector urls = {"b7iVk-ylMB0", "H2v1GnDmLHI", "gGSH_0o-D7g",
-                   "b7iVk-ylMB0", "H2v1GnDmLHI", "gGSH_0o-D7g",
-                   "b7iVk-ylMB0", "H2v1GnDmLHI", "gGSH_0o-D7g",
-                   "b7iVk-ylMB0", "H2v1GnDmLHI", "gGSH_0o-D7g",
-                   "b7iVk-ylMB0", "H2v1GnDmLHI", "gGSH_0o-D7g",
-                   };
-
     QLayout *layout = scroll->layout();
 
     QVector<ThumbnailWidget*> widgets;
     for (auto url : urls) {
-        ThumbnailWidget *view = new ThumbnailWidget(url, "song", "performer", "genre", ui->scrollArea);
+        auto parsedData = m_transport->parseData(url);
+        //url::song::perfomer::genre
+        ThumbnailWidget *view = new ThumbnailWidget(parsedData[0], parsedData[1], parsedData[2], parsedData[3], ui->scrollArea);
 
-        connect(view, SIGNAL (clicked(QString)), this, SLOT (btnPlayPressed(QString)));
+        connect(view, SIGNAL (clicked(QString&)), this, SLOT (btnPlayPressed(QString&)));
 
         view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         layout->setAlignment(Qt::AlignRight);
@@ -61,7 +57,7 @@ void MainWindow::initializeRecommended()
     }
 }
 
-void MainWindow::btnPlayPressed(QString url)
+void MainWindow::btnPlayPressed(QString &url)
 {
     m_view->setHtml(getHtml(url));
 }
@@ -70,7 +66,7 @@ void MainWindow::btnSearchPressed()
 {
     if (!loggedIn) {
         LoginDialog *login = new LoginDialog(this);
-        connect(login, SIGNAL (acceptLogin(QString)), this, SLOT (notifyServer(QString)));
+        connect(login, SIGNAL (acceptLogin(QString&)), this, SLOT (getUsername(QString&)));
 
         login->exec();
 
@@ -85,7 +81,7 @@ void MainWindow::queryServer() const
     QString performer = ui->txtPerformer->text();
     QString song = ui->txtSong->text();
 
-    QString query = song + "::" + performer + "::" + genre + "::" + m_username;
+    QString query = performer + "::" + song + "::" + genre + "::" + m_username;
 
     qDebug() << "About to send query:" << query;
 
@@ -97,12 +93,9 @@ void MainWindow::queryServer() const
     }
 }
 
-void MainWindow::notifyServer(QString username)
+void MainWindow::getUsername(QString &username)
 {
-    //TODO should notify server about the username
     m_username = username;
-
-    qDebug() << "should notify server about the username";
 }
 
 QString MainWindow::getHtml(QString url) const

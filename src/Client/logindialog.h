@@ -17,7 +17,7 @@ public:
     explicit LoginDialog(QWidget *parent = nullptr);
 
 signals:
-    void acceptLogin(QString user);
+    void acceptLogin(QString &user);
 
 public slots:
     void slotAcceptLogin();

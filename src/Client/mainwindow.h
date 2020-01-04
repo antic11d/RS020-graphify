@@ -22,8 +22,9 @@ public:
 
 private slots:
     void btnSearchPressed();
-    void btnPlayPressed(QString url);
-    void notifyServer(QString username);
+    void btnPlayPressed(QString &url);
+    void getUsername(QString &username);
+    void initializeRecommended(QVector<QString> &urls);
 
 private:
     Ui::MainWindow *ui;
@@ -33,7 +34,7 @@ private:
     bool loggedIn;
     QString m_username;
 
-    void initializeRecommended();
+
     QString getThumbnail(QString url) const;
     QString getHtml(QString url) const;
     void queryServer() const;

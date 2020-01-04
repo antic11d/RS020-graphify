@@ -23,7 +23,6 @@ static QByteArray intToArray(qint32 source)
     return temp;
 }
 
-
 bool Transport::writeData(QString query) const
 {
     if (m_socket->state() == QAbstractSocket::ConnectedState) {
@@ -46,27 +45,26 @@ bool Transport::connectToHost() const
     return m_socket->waitForConnected();
 }
 
+QVector<QString> Transport::parseData(QString &string) const
+{
+    QVector<QString> result;
+    foreach (auto s, string.split("::"))
+        result.push_back(s);
+    return result;
+}
+
 void Transport::readData()
 {
-//    QString msg = m_socket->readAll();
-
-//    qDebug() << "Got graph data" << msg;
-
     QDataStream socketStream(m_socket);
     QVector<QString> urls;
-//    QString url;
     for (;;) {
     socketStream.startTransaction();
     socketStream >> urls;
-    if (socketStream.commitTransaction()) {
-        qDebug() << "Received :";
-        for (auto url : urls) {
-            qDebug() << url;
-        }
-    }
 
+    if (socketStream.commitTransaction()) {
+        emit dataReady(urls);
+    }
     else
         break;
     }
-
 }

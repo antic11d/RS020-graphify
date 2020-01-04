@@ -16,7 +16,7 @@ public:
     explicit ThumbnailWidget(QString url, QString songTitle, QString performer, QString genre, QWidget *parent = nullptr);
 
 signals:
-    void clicked(QString url);
+    void clicked(QString &url);
 
 private slots:
     void btnPlayPressed();

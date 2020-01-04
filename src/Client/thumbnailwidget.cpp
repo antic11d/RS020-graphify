@@ -4,8 +4,9 @@ ThumbnailWidget::ThumbnailWidget(QString url, QString songTitle, QString perform
     : QGroupBox(parent)
     , m_url(url)
 {
+    qDebug() << url << songTitle << performer << genre;
     m_view = new QWebEngineView(parent);
-    m_view->resize(10, 150);
+    m_view->resize(50, 150);
     m_view->setHtml(getThumbnail(url));
     m_view->setDisabled(true);
 
