@@ -47,8 +47,6 @@ QVector<QString> prepForSending(QVector<QPointer<Entity>> &res, QStringList quer
     QVector<QString> result;
     switch (t_case) {
         case 2:
-            for(auto q : query_params)
-                qDebug() << q;
             result = packForSending(res, "Mica Picka", "Pop Picka");
             break;
         case 4:
@@ -137,8 +135,6 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
     return nullptr;
 }
 
-
-
 void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
 {
     Entity *p = new PEntryPoint("P1", "P1", nullptr, this);
@@ -161,8 +157,6 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
         connectToEntry(performer, "p", &connectedEntities);
         connectToEntry(genre, "g", &connectedEntities);
 
-
-//        Connect the dots
         performer->addEdge(QPointer(new Edge("SINGS", song, this)));
         song->addEdge(QPointer(new Edge("SINGED_BY", performer, this)));
         if (genre != nullptr) {
@@ -170,37 +164,6 @@ void KnowledgeGraph::parseJsonEntities(const QJsonArray &arr)
             genre->addEdge(QPointer(new Edge("TYPE_FOR", song, this)));
         }
     }
-/*
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "PERFORMER") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }
-
-    qDebug() << "====================================";
-
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "SONG") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }
-
-    qDebug() << "====================================";
-
-    foreach(const auto& e, entityMap.values()) {
-        if (e->getType() == "GENRE") {
-            qDebug() << e->getType() << e->getKey() << e->getValue();
-
-            foreach(const auto& edge, e->getEdges())
-                qDebug() << "\t" << edge->getType() << edge->getPointsTo()->getValue();
-        }
-    }*/
 }
 
 KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
@@ -296,7 +259,6 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
                         user_edge->reinforce();
                         return;
                     }
-
                 }
             }
         }
