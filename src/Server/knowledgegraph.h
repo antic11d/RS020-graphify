@@ -25,6 +25,7 @@
 #include "performergenretraverse.h"
 #include "performertraverse.h"
 #include "songtraverse.h"
+#include "genretraverse.h"
 #include "collaborativefiltering.h"
 #include "cachedsong.h"
 #include "minheap.h"

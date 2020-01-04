@@ -21,6 +21,7 @@ SOURCES += \
         edge.cpp \
         entity.cpp \
         genre.cpp \
+        genretraverse.cpp \
         gentrypoint.cpp \
         knowledgegraph.cpp \
         main.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     edge.h \
     entity.h \
     genre.h \
+    genretraverse.h \
     gentrypoint.h \
     knowledgegraph.h \
     metadata.h \
