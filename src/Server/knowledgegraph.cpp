@@ -53,12 +53,11 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
     switch (t_case) {
         case 1:
             result = packForSending(res, "", query_params[0]);
-            for (auto r : result) {
-                qDebug() << r;
-            }
             break;
         case 2:
             result = packForSending(res, "", "");
+            break;
+        case 3:
             break;
         case 4:
             result = packForSending(res, query_params[0], "");
@@ -66,9 +65,14 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
         case 5:
             result = packForSending(res, query_params[0], query_params[1]);
             break;
-//        case 9:
-//        default:
-//            break;
+        case 6:
+            result = packForSending(res, query_params[0], "");
+            qDebug() << "ovde";
+            for (auto r : result)
+                qDebug() << r;
+            break;
+        default:
+            break;
     }
     return result;
 }
@@ -225,6 +229,7 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
     SongTraverse sT;
     CollaborativeFIltering cT;
     GenreTraverse gT;
+    PerformerSongTraverse psT;
     TraverseBehavior *t = nullptr;
     switch (t_case) {
         case 1:
@@ -236,6 +241,9 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
             t = &sT;
             res = t->traverse(query_params, m_sentries);
             break;
+        case 3:
+
+            break;
         case 4:
             t = &pT;
             res = t->traverse(query_params, m_pentries);
@@ -243,6 +251,10 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
         case 5:
             t = &pgT;
             res = t->traverse(query_params, m_pentries);
+            break;
+        case 6:
+            t = &psT;
+            res = t->traverse(query_params, m_sentries);
             break;
         case 9:
             t = &cT;
