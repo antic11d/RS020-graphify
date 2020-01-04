@@ -26,14 +26,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::initializeRecommended(QVector<QString> &urls)
 {
-
-
     m_view = new QWebEngineView(ui->graphicsView);
 //    m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_view->resize(ui->graphicsView->width(), ui->graphicsView->height());
-    if (urls.length() > 0)
+    if (urls.length() > 0) {
         m_view->setHtml(getHtml(urls[0].split("::")[0]));
-    m_view->show();
+        m_view->show();
+    } else {
+        m_view->hide();
+//        m_view->close();
+    }
 
     scroll = new QWidget;
     scroll->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -71,6 +73,9 @@ void MainWindow::clearInput()
 
 void MainWindow::btnSearchPressed()
 {
+    if (ui->txtSong->text() == "" && ui->txtGenre->text() == "" && ui->txtPerformer->text() == "")
+        return;
+
     if (!loggedIn) {
         LoginDialog *login = new LoginDialog(this);
         connect(login, SIGNAL (acceptLogin(QString&)), this, SLOT (getUsername(QString&)));
@@ -85,9 +90,9 @@ void MainWindow::btnSearchPressed()
 
 void MainWindow::queryServer() const
 {
-    QString genre = ui->txtGenre->text();
-    QString performer = ui->txtPerformer->text();
-    QString song = ui->txtSong->text();
+    QString genre = ui->txtGenre->text().trimmed().toLower();
+    QString performer = ui->txtPerformer->text().trimmed().toLower();
+    QString song = ui->txtSong->text().trimmed().toLower();
 
     QString query = performer + "::" + song + "::" + genre + "::" + m_username;
 
