@@ -29,5 +29,6 @@ QVector<QPointer<Entity>> PerformerTraverse::traverse(const QStringList &query, 
         res.push_back(song->getPointsTo());
     }
 
+
     return res;
 }

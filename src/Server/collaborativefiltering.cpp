@@ -1,6 +1,7 @@
 #include "collaborativefiltering.h"
 
 QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+    qDebug() << "AJde da vidimo";
     QString title = query[0];
     QString username = query[1];
     QVector<QPointer<Entity>> res;
@@ -30,7 +31,6 @@ QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &qu
     {
         for (auto j : i)
         {
-            qDebug() << "foudn song: " << j->getValue();
             res.push_back(j);
         }
     }

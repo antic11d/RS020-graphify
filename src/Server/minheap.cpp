@@ -49,7 +49,7 @@ QVector<QString> MinHeap::read()
 {
     QVector<QString> res;
     for (auto song : inCache) {
-        res.push_back(song.getUrl());
+        res.push_back(song.getTitle());
     }
     return res;
 }

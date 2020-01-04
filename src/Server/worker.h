@@ -18,6 +18,7 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
+    void addUser(QString username, QString passwd);
 
 public slots:
     void readyRead();
