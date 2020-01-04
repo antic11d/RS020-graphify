@@ -12,8 +12,6 @@ Transport::Transport(const QString& hostname, quint16 port, bool debug, QObject 
     m_in.setVersion(QDataStream::Qt_5_5);
 
     connect(m_socket, &QIODevice::readyRead, this, &Transport::readData);
-    if (m_debug)
-        qDebug() << "Transport up";
 }
 
 // Helper serialization
@@ -25,11 +23,11 @@ static QByteArray intToArray(qint32 source)
     return temp;
 }
 
-//TODO should be attached as button SEND callback
-bool Transport::writeData(QString song, QString genre, QString performer) const
+
+bool Transport::writeData(QString query) const
 {
     if (m_socket->state() == QAbstractSocket::ConnectedState) {
-        m_socket->write((song+","+genre+","+performer).toUtf8());
+        m_socket->write((query).toUtf8());
 
         return m_socket->waitForBytesWritten();
     } else
