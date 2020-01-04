@@ -35,10 +35,15 @@ class KnowledgeGraph : public QObject
 public:
     KnowledgeGraph(const QString category, QObject *parent);
 
-    QVector<QPointer<Entity>> traverse(const QStringList &query_params, const int &t_case) const;
-    QVector<QPointer<Entity>> traverseProcess(const QString &query);
+    QVector<QPointer<Entity>> traverse(QStringList &query_params, const int &t_case);
+    QVector<QString> traverseProcess(const QString &query);
     QVector<QString> collaborative(const QString &username, const QString &title);
     QString findSongUrl(const QString &title);
+    QString findSong(const QString &title);
+    void addUser(const QString &username, const QString &passwd);
+    QSet<QString> existing_users;
+public slots:
+    void newUser(QString username, QString title);
 
 private:
     QVector<QPair<QString, QString>> m_category {
@@ -59,7 +64,6 @@ private:
     template <typename T>
     QPointer<Entity> parse(const QJsonValue &v, QMap<QString, QPointer<Entity>> *entityMap, const QString &field);
 //    QVector<QString> packData(QVector<Song*> data) const;
-    void addUser(const QString &username, const QString &passwd);
     void strengthenGraph(const QString &username, const QString &title);
 
 };

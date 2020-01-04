@@ -11,7 +11,7 @@ Server::Server(int port, QObject *parent)
 
     cache = new MinHeap(QVector<CachedSong> {
                             CachedSong (QString("Changes"), QString("xMQ0Ryy01yE"), 1),
-                            CachedSong (QString("Run It"), QString("w6QGe-pXgdI"), 1),
+                            CachedSong (QString("Run It!"), QString("w6QGe-pXgdI"), 1),
                             CachedSong (QString("This Love"), QString("XPpTgCho5ZA"), 1),
                             CachedSong (QString("Whenever, Wherever"), QString("weRHyjj34ZE"), 1)
                             });
@@ -33,6 +33,7 @@ void Server::incomingConnection(qintptr handle)
 
     Worker *worker = new Worker(handle, m_graph, cache, this);
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(worker, SIGNAL(addUser(QString, QString)), m_graph, SLOT(newUser(QString, QString)));
     worker->start();
 }
 

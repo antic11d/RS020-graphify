@@ -21,9 +21,14 @@ void Worker::run()
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection); // DirectConnection zbog tredova
 
     qDebug() << "Client connected on handle" << m_socketDescriptor;
-    sendData(m_cache->read());
+    auto song_titles = m_cache->read();
+    QVector<QString> response;
+    for (auto song_title : song_titles) {
+        response.push_back(m_graph->findSong(song_title));
+    }
 
-    exec(); // loop
+    sendData(response);
+    exec();
 }
 
 static QString bytesToString(QByteArray bytes)
@@ -37,22 +42,29 @@ void Worker::readyRead()
 
     QString stringified = bytesToString(buff);
     stringified = stringified.remove(QChar('\n'));
+    //Stize Performer::Song::Genre
     //TODO kad stigne u formatu Performer::Song::Genre izvucemo pesmu ako ima
     qDebug() << "Got query" << stringified;
+    QStringList query_params = stringified.split("::");
+    QVector<QString> col_res;
 
-    QString url = m_graph->findSongUrl(stringified);
-    if(url != nullptr) {
-        m_cache->add(stringified, url);
+    if(query_params[1] != "") {
+        QString url = m_graph->findSongUrl(query_params[1]);
+        if(url != nullptr) {
+            m_cache->add(query_params[1], url);
+        }
+        QStringList query{query_params[1], query_params[3]};
+        emit addUser(query_params[3], query_params[1]);
+        QVector<QPointer<Entity>> col = m_graph->traverse(query, 9);
+        for(auto song : col) {
+            col_res.push_back(m_graph->findSong(song->getValue()));
+        }
     }
 
+    auto res = m_graph->traverseProcess(stringified);
+    res += col_res;
 
-    //TODO nek bude stringified
-    //Query se s fronta pravi tako da dodje Performer::Song::Genre
-    //Ima pesma trap, nemoj se zbunis bato dobri
-    QVector<QPointer<Entity>> res = m_graph->traverseProcess("Shakira::::");
-
-
-//    sendData(res);
+    sendData(res);
 }
 
 bool Worker::sendData(QVector<QString> data)
