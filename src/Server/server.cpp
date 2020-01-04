@@ -10,16 +10,17 @@ Server::Server(int port, QObject *parent)
          << tr("https://www.youtube.com/embed/vgmRgE1k8Ek&t=2222s");
 
     cache = new MinHeap(QVector<CachedSong> {
-                            CachedSong (QString("Changes"), QString("xMQ0Ryy01yE"), 1),
-                            CachedSong (QString("Run It!"), QString("w6QGe-pXgdI"), 1),
-                            CachedSong (QString("This Love"), QString("XPpTgCho5ZA"), 1),
-                            CachedSong (QString("Whenever, Wherever"), QString("weRHyjj34ZE"), 1)
+                            CachedSong (QString("changes"), QString("xMQ0Ryy01yE"), 1),
+                            CachedSong (QString("run it!"), QString("w6QGe-pXgdI"), 1),
+                            CachedSong (QString("this love"), QString("XPpTgCho5ZA"), 1),
+                            CachedSong (QString("whenever, wherever"), QString("weRHyjj34ZE"), 1)
                             });
 }
 
 void Server::start()
 {
     m_graph = new KnowledgeGraph(QString("big_data"), this);
+    qDebug() << "Uspeo Server";
     if (!this->listen(QHostAddress::Any, m_port)) {
         qDebug() << "Could not start server on port" << m_port;
     } else {

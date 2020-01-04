@@ -111,6 +111,7 @@ void KnowledgeGraph::connectToEntry(const QPointer<Entity> e, QString flag, QMap
     connectedEntities->insert(e->getKey(), e);
 }
 
+
 template <typename T>
 QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPointer<Entity>>* entityMap, const QString &field)
 {
@@ -122,7 +123,8 @@ QPointer<Entity> KnowledgeGraph::parse(const QJsonValue &v, QMap<QString, QPoint
         return nullptr;
 
     if (!entityMap->contains(parsedId)) {
-        QString label = v.toObject().value(field+"Label").toString();
+        QString label = v.toObject().value(field+"Label").toString().toLower();
+
         Entity* parsed;
         if (field == "title") {
             QString ytLink = v.toObject().value("YouTube_video_ID").toString();
@@ -183,18 +185,18 @@ KnowledgeGraph::KnowledgeGraph(const QString category, QObject *parent)
 
     initalizeGraph();
 
-      addUser("andrija", "andrija");
-      addUser("mica", "mica");
-      addUser("nidza", "nidza");
-      strengthenGraph("mica", "Changes");
-      strengthenGraph("mica", "Changes");
-      strengthenGraph("mica", "Run It!");
-      strengthenGraph("nidza", "Whenever, Wherever");
-      strengthenGraph("nidza", "Changes");
-      strengthenGraph("nidza", "Changes");
-      strengthenGraph("mica", "Turn Up the Radio");
-      strengthenGraph("nidza", "Turn Up the Radio");
-      strengthenGraph("andrija", "Changes");
+    addUser("andrija", "andrija");
+    addUser("mica", "mica");
+    addUser("nidza", "nidza");
+    strengthenGraph("mica", "changes");
+    strengthenGraph("mica", "changes");
+    strengthenGraph("mica", "run it!");
+    strengthenGraph("nidza", "whenever, wherever");
+    strengthenGraph("nidza", "changes");
+    strengthenGraph("nidza", "changes");
+    strengthenGraph("mica", "turn up the radio");
+    strengthenGraph("nidza", "turn up the radio");
+    strengthenGraph("andrija", "changes");
 
 }
 
