@@ -36,5 +36,6 @@ QVector<QPointer<Entity>> PerformerGenreTraverse::traverse(const QStringList &qu
         }
     }
 
+
     return res;
 }

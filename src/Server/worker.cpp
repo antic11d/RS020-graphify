@@ -24,7 +24,9 @@ void Worker::run()
     auto song_titles = m_cache->read();
     QVector<QString> response;
     for (auto song_title : song_titles) {
-        response.push_back(m_graph->findSong(song_title));
+        auto data = m_graph->findSong(song_title);
+        QString s = data[0] + "::" + data[1] + "::" + data[2] + "::" + data[3];
+        response.push_back(s);
     }
 
     sendData(response);
@@ -57,7 +59,9 @@ void Worker::readyRead()
         emit addUser(query_params[3], query_params[1]);
         QVector<QPointer<Entity>> col = m_graph->traverse(query, 9);
         for(auto song : col) {
-            col_res.push_back(m_graph->findSong(song->getValue()));
+            auto data = m_graph->findSong(song->getValue());
+            QString s = data[0] + "::" + data[1] + "::" + data[2] + "::" + data[3];
+            col_res.push_back(s);
         }
     }
 

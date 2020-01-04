@@ -11,6 +11,7 @@
 #include <QJsonArray>
 #include <QVector>
 #include <QPair>
+#include <QVector3D>
 #include <algorithm>
 #include <iterator>
 #include "entity.h"
@@ -39,7 +40,7 @@ public:
     QVector<QString> traverseProcess(const QString &query);
     QVector<QString> collaborative(const QString &username, const QString &title);
     QString findSongUrl(const QString &title);
-    QString findSong(const QString &title);
+    QVector<QString> findSong(const QString &title);
     void addUser(const QString &username, const QString &passwd);
     QSet<QString> existing_users;
 public slots:

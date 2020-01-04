@@ -273,7 +273,7 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
 
 }
 
-QString KnowledgeGraph::findSong(const QString &title)
+QVector<QString> KnowledgeGraph::findSong(const QString &title)
 {
     QString performer = "";
     QString genre = "";
@@ -295,7 +295,7 @@ QString KnowledgeGraph::findSong(const QString &title)
         }
     }
 
-    return url + "::" + title + "::" + performer + "::" + genre;
+    return QVector<QString>{url, title, performer, genre};
 }
 
 
