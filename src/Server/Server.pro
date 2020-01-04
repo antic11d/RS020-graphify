@@ -35,6 +35,7 @@ SOURCES += \
         sentrypoint.cpp \
         server.cpp \
         song.cpp \
+        songgenretraverse.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
         uentrypoint.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
     sentrypoint.h \
     server.h \
     song.h \
+    songgenretraverse.h \
     songtraverse.h \
     traversebehavior.h \
     uentrypoint.h \

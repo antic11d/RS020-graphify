@@ -58,6 +58,7 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
             result = packForSending(res, "", "");
             break;
         case 3:
+            result = packForSending(res, "", query_params[1]);
             break;
         case 4:
             result = packForSending(res, query_params[0], "");
@@ -67,9 +68,6 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
             break;
         case 6:
             result = packForSending(res, query_params[0], "");
-            qDebug() << "ovde";
-            for (auto r : result)
-                qDebug() << r;
             break;
         default:
             break;
@@ -230,6 +228,7 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
     CollaborativeFIltering cT;
     GenreTraverse gT;
     PerformerSongTraverse psT;
+    SongGenreTraverse sgT;
     TraverseBehavior *t = nullptr;
     switch (t_case) {
         case 1:
@@ -242,7 +241,8 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
             res = t->traverse(query_params, m_sentries);
             break;
         case 3:
-
+            t = &sgT;
+            res = t->traverse(query_params, m_sentries);
             break;
         case 4:
             t = &pT;
