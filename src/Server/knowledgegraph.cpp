@@ -31,15 +31,11 @@ QVector<QString> KnowledgeGraph::packForSending(QVector<QPointer<Entity>> &respo
    QVector<QString> res;
    for (auto song : response) {
         auto data = findSong(song->getValue());
-        if (performer == "")
-            performer = data[2];
-        if (genre == "")
-            genre = data[3];
         QString songData = "";
         songData += song->getMetadata()->getUrl() + "::";
         songData += song->getValue() + "::";
-        songData += performer + "::";
-        songData += genre;
+        songData += performer != "" ? performer : data[2] + "::";
+        songData += genre != "" ? genre : data[3];
         res.push_back(songData);
    }
 
@@ -47,15 +43,44 @@ QVector<QString> KnowledgeGraph::packForSending(QVector<QPointer<Entity>> &respo
 
 }
 
+QVector<QString> KnowledgeGraph::getRecommendation(QString performer, QString genre)
+{
+    QVector<QPointer<Entity>> res;
+    QStringList to_send;
+    if (performer != "") {
+        to_send.push_back(performer);
+        res += traverse(to_send, 4);
+    }
+    to_send.clear();
+    if (genre != "") {
+        to_send.push_back(genre);
+        res += traverse(to_send, 1);
+    }
+
+    auto result = packForSending(res, "", "");
+    for (auto r : result) {
+        qDebug() << "rezultat: " << r;
+    }
+    return result;
+}
+
 QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, QStringList query_params, const int &t_case)
 {
     QVector<QString> result;
+    QVector<QString> data;
+    QVector<QString> recommendation;
     switch (t_case) {
         case 1:
             result = packForSending(res, "", query_params[0]);
+            for (auto r : result)
+                qDebug() << "za pop rock: " << r;
             break;
         case 2:
             result = packForSending(res, "", "");
+            qDebug() << "jedina pesma " << result[0];
+            data = findSong(res[0]->getValue());
+            recommendation = getRecommendation(data[2], data[3]);
+            result += recommendation;
             break;
         case 3:
             result = packForSending(res, "", query_params[1]);
@@ -234,7 +259,6 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
         case 1:
             t = &gT;
             res = t->traverse(query_params, m_gentries);
-            qDebug() << res.size();
             break;
         case 2:
             t = &sT;
