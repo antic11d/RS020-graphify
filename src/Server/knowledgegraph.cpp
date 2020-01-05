@@ -76,6 +76,10 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
             break;
         case 2:
             result = packForSending(res, "", "");
+            qDebug() << "Ovde sam" << result.size();
+            for (auto r : result) {
+                qDebug() << r;
+            }
             data = findSong(res[0]->getValue());
             recommendation = getRecommendation(data[2], data[3]);
             result += recommendation;
@@ -241,6 +245,8 @@ QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
     existing_users.insert(username);
     prepared.first.pop_back();
     QVector<QPointer<Entity>> res = traverse(prepared.first, prepared.second);
+    if (res.size() == 0)
+       return QVector<QString>();
     auto result = prepForSending(res, prepared.first, prepared.second);
     std::sort( result.begin(), result.end() );
     result.erase( std::unique( result.begin(), result.end() ), result.end());
@@ -267,6 +273,10 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
         case 2:
             t = &sT;
             res = t->traverse(query_params, m_sentries);
+            qDebug() << "Ovde sam odmah iz traversa" << res.size();
+            for (auto r : res) {
+                qDebug() << r->getValue();
+            }
             break;
         case 3:
             t = &sgT;
@@ -327,8 +337,12 @@ void KnowledgeGraph::strengthenGraph(const QString &username, const QString &tit
             searchedSong = song->getPointsTo();
         }
     }
-    user->addEdge(QPointer(new Edge("LIKES", searchedSong, this, 1)));
-    searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
+    if (user != nullptr && searchedSong != nullptr)
+    {
+        user->addEdge(QPointer(new Edge("LIKES", searchedSong, this, 1)));
+        searchedSong->addEdge(QPointer(new Edge("LIKED_BY", user, this)));
+    }
+
 
 }
 
