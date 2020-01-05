@@ -21,6 +21,7 @@ SOURCES += \
         edge.cpp \
         entity.cpp \
         genre.cpp \
+        genretraverse.cpp \
         gentrypoint.cpp \
         knowledgegraph.cpp \
         main.cpp \
@@ -29,10 +30,12 @@ SOURCES += \
         pentrypoint.cpp \
         performer.cpp \
         performergenretraverse.cpp \
+        performersongtraverse.cpp \
         performertraverse.cpp \
         sentrypoint.cpp \
         server.cpp \
         song.cpp \
+        songgenretraverse.cpp \
         songtraverse.cpp \
         traversebehavior.cpp \
         uentrypoint.cpp \
@@ -50,6 +53,7 @@ HEADERS += \
     edge.h \
     entity.h \
     genre.h \
+    genretraverse.h \
     gentrypoint.h \
     knowledgegraph.h \
     metadata.h \
@@ -57,10 +61,12 @@ HEADERS += \
     pentrypoint.h \
     performer.h \
     performergenretraverse.h \
+    performersongtraverse.h \
     performertraverse.h \
     sentrypoint.h \
     server.h \
     song.h \
+    songgenretraverse.h \
     songtraverse.h \
     traversebehavior.h \
     uentrypoint.h \

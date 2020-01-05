@@ -3,6 +3,7 @@
 
 #include <QWebEngineView>
 #include <QWebEngineSettings>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -10,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_transport = new Transport("192.168.1.108", 12345, true, this);
+    m_transport = new Transport("10.0.155.169", 12345, true, this);
 
     if (m_transport->connectToHost()) {
         qDebug() << "Connected to server";
@@ -19,22 +20,30 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     loggedIn = false;
+    ui->btnLogOut->setDisabled (true);
 
     connect(ui->btnSearch, SIGNAL (pressed()), this, SLOT (btnSearchPressed()));
+    connect(ui->btnLogOut, SIGNAL (pressed()), this, SLOT(btnLogOutPressed ()));
     connect(m_transport, SIGNAL (dataReady(QVector<QString>&)), this, SLOT (initializeRecommended(QVector<QString>&)));
 }
 
 void MainWindow::initializeRecommended(QVector<QString> &urls)
 {
+
+    if (urls.length () == 0){
+        QMessageBox::information (this, "Song query", "We don't have song to show you but feel free to keep searching!");
+    }
+
+//    ui->graphicsView->setSizePolicy (QSizePolicy::Expanding, QSizePolicy::Preferred);
+
     m_view = new QWebEngineView(ui->graphicsView);
-//    m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_view->resize(ui->graphicsView->width(), ui->graphicsView->height());
+    m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_view->resize(ui->graphicsView->size ());
     if (urls.length() > 0) {
         m_view->setHtml(getHtml(urls[0].split("::")[0]));
         m_view->show();
     } else {
         m_view->hide();
-//        m_view->close();
     }
 
     scroll = new QWidget;
@@ -73,7 +82,8 @@ void MainWindow::clearInput()
 
 void MainWindow::btnSearchPressed()
 {
-    if (ui->txtSong->text() == "" && ui->txtGenre->text() == "" && ui->txtPerformer->text() == "")
+    if ((ui->txtSong->text() == "" && ui->txtGenre->text() == "" && ui->txtPerformer->text() == "") ||
+        (ui->txtSong->text() != "" && ui->txtGenre->text() != "" && ui->txtPerformer->text() != ""))
         return;
 
     if (!loggedIn) {
@@ -83,6 +93,7 @@ void MainWindow::btnSearchPressed()
         login->exec();
 
         loggedIn = true;
+        ui->btnLogOut->setEnabled (true);
     }
     queryServer();
     clearInput();
@@ -146,3 +157,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::btnLogOutPressed()
+{
+    switch(QMessageBox::question (this, tr("Logout"), tr("Are you sure?"), QMessageBox::Yes | QMessageBox::Cancel)){
+        case QMessageBox::Yes:
+            m_username = QString("");
+            loggedIn = false;
+            ui->btnLogOut->setDisabled (true);
+        break;
+        default:
+        break;
+    }
+}

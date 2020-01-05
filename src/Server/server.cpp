@@ -20,7 +20,6 @@ Server::Server(int port, QObject *parent)
 void Server::start()
 {
     m_graph = new KnowledgeGraph(QString("big_data"), this);
-    qDebug() << "Uspeo Server";
     if (!this->listen(QHostAddress::Any, m_port)) {
         qDebug() << "Could not start server on port" << m_port;
     } else {

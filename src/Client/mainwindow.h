@@ -26,6 +26,8 @@ private slots:
     void getUsername(QString &username);
     void initializeRecommended(QVector<QString> &urls);
 
+    void btnLogOutPressed();
+
 private:
     Ui::MainWindow *ui;
     QWebEngineView *m_view;
