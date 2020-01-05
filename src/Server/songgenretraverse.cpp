@@ -7,6 +7,8 @@ QVector<QPointer<Entity>> SongGenreTraverse::traverse(const QStringList &query, 
     QVector<QPointer<Entity>> res;
     auto starting_entry = entires[0];
 
+    qDebug() << "u funkicji " << song << " " << genre;
+
     for(auto e_song : starting_entry->getEdges()) {
         if (e_song->getPointsTo()->getValue() == song) {
             auto searchedSong = e_song->getPointsTo();

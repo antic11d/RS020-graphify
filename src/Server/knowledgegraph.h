@@ -14,6 +14,7 @@
 #include <QVector3D>
 #include <algorithm>
 #include <iterator>
+#include <random>
 #include "entity.h"
 #include "performer.h"
 #include "song.h"
@@ -42,6 +43,7 @@ public:
     QVector<QPointer<Entity>> traverse(QStringList &query_params, const int &t_case);
     QVector<QString> traverseProcess(const QString &query);
     QVector<QString> collaborative(const QString &username, const QString &title);
+    QVector<QPointer<Entity>> user_songs(QString &username);
     QString findSongUrl(const QString &title);
     QVector<QString> findSong(const QString &title);
     void addUser(const QString &username, const QString &passwd);
