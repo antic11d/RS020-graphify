@@ -34,7 +34,8 @@ QVector<QString> KnowledgeGraph::packForSending(QVector<QPointer<Entity>> &respo
         QString songData = "";
         songData += song->getMetadata()->getUrl() + "::";
         songData += song->getValue() + "::";
-        songData += performer != "" ? performer : data[2] + "::";
+        songData += performer != "" ? performer : data[2];
+        songData += "::";
         songData += genre != "" ? genre : data[3];
         res.push_back(songData);
    }
@@ -72,18 +73,18 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
     switch (t_case) {
         case 1:
             result = packForSending(res, "", query_params[0]);
-            for (auto r : result)
-                qDebug() << "za pop rock: " << r;
             break;
         case 2:
             result = packForSending(res, "", "");
-            qDebug() << "jedina pesma " << result[0];
             data = findSong(res[0]->getValue());
             recommendation = getRecommendation(data[2], data[3]);
             result += recommendation;
             break;
         case 3:
             result = packForSending(res, "", query_params[1]);
+            data = findSong(res[0]->getValue());
+            recommendation = getRecommendation("", data[3]);
+            result += recommendation;
             break;
         case 4:
             result = packForSending(res, query_params[0], "");
@@ -93,6 +94,9 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
             break;
         case 6:
             result = packForSending(res, query_params[0], "");
+            data = findSong(res[0]->getValue());
+            recommendation = getRecommendation(data[2], "");
+            result += recommendation;
             break;
         default:
             break;
@@ -103,8 +107,6 @@ QVector<QString> KnowledgeGraph::prepForSending(QVector<QPointer<Entity>> &res, 
 
 void KnowledgeGraph::initalizeGraph()
 {
-//    qDebug() << "Reading file on path " << m_inFile->fileName();
-
     if (!m_inFile->exists()) {
         qDebug() << "File doesnt exists";
         return;
@@ -288,7 +290,6 @@ QVector<QPointer<Entity>> KnowledgeGraph::traverse(QStringList &query_params, co
     }
     return res;
 }
-
 
 
 void KnowledgeGraph::addUser(const QString &username, const QString &passwd) {
