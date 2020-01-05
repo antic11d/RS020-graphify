@@ -242,6 +242,8 @@ QVector<QString> KnowledgeGraph::traverseProcess(const QString &query) {
     prepared.first.pop_back();
     QVector<QPointer<Entity>> res = traverse(prepared.first, prepared.second);
     auto result = prepForSending(res, prepared.first, prepared.second);
+    std::sort( result.begin(), result.end() );
+    result.erase( std::unique( result.begin(), result.end() ), result.end());
     return result;
 }
 
