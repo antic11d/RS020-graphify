@@ -3,6 +3,7 @@
 
 #include "traversebehavior.h"
 #include "entity.h"
+#include <iterator>
 #include <QPointer>
 #include <QVector>
 #include <QDebug>

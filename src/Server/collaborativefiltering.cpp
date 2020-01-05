@@ -1,16 +1,17 @@
 #include "collaborativefiltering.h"
 
 QVector<QPointer<Entity>> CollaborativeFIltering::traverse(const QStringList &query, const QVector<QPointer<Entity>> &entires) const {
+
     QString title = query[0];
     QString username = query[1];
     QVector<QPointer<Entity>> res;
     QVector<QVector<QPointer<Entity>>> songs;
+    QVector<QPointer<Entity>> user_songs;
     auto starting_entry = entires[0];
     for(auto tmp_song_edge : starting_entry->getEdges())
     {
         if(tmp_song_edge->getPointsTo()->getValue() == title)
         {
-            qDebug() << tmp_song_edge->getPointsTo()->getValue();
             auto searched_song = tmp_song_edge->getPointsTo();
             auto users = find_all_users(searched_song);
 
