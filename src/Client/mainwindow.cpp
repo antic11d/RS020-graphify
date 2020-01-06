@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_transport = new Transport("10.0.155.169", 12345, true, this);
+    m_transport = new Transport("localhost", 12345, true, this);
 
     if (m_transport->connectToHost()) {
         qDebug() << "Connected to server";

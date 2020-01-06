@@ -37,9 +37,6 @@ HEADERS += \
         thumbnailwidget.h \
         transport.h
 
-RESOURCES += \
-        resources/player.qrc
-
 FORMS += \
         mainwindow.ui
 

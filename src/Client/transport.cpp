@@ -14,15 +14,6 @@ Transport::Transport(const QString& hostname, quint16 port, bool debug, QObject 
     connect(m_socket, &QIODevice::readyRead, this, &Transport::readData);
 }
 
-// Helper serialization
-static QByteArray intToArray(qint32 source)
-{
-    QByteArray temp;
-    QDataStream data(&temp, QIODevice::ReadWrite);
-    data << source;
-    return temp;
-}
-
 bool Transport::writeData(QString query) const
 {
     if (m_socket->state() == QAbstractSocket::ConnectedState) {
