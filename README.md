@@ -2,7 +2,7 @@
 
 Project includes server and client application. <br>
 Main functionality is streaming service with recommendation system based on KnowledgeGraph.
----
+
 ### Client
 Client side is desktop application which retrieves trending, recommended videos and particular searched song.<br>
 As some of owners have forbidden certain videos being streamed from youtube, some of the songs cannot be played in client application. <br> 
@@ -11,12 +11,14 @@ Three search parameters are included:
 * Song title
 * Genre <br>
 As well as the different combinations of those three.
----
+
 ### Server
+
 Server application is responsible for handling requests, generating recommended songs based on users' past searches as well as the searches of users who likes similar music. <br>
 All data used for generating KnowledgeGraph, which is the engine behind recommendation system, is gathered from WikiData API.
----
+
 ### Usage
+
 Usage of client application is pretty simplified, and the workflow is described bellow.
 
 ![Workflow](appworkflow.png)
