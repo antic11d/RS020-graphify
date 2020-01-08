@@ -21,7 +21,7 @@ All data used for generating KnowledgeGraph, which is the engine behind recommen
 
 Usage of client application is pretty simplified, and the workflow is described bellow.
 
-![Workflow](appworkflow.png)
+![Workflow](Graphify.png)
 
 #### Current user interface: <br>
 ![GUI](Screenshots/Screenshot_3.png)
